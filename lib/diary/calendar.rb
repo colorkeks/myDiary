@@ -21,7 +21,8 @@ module Diary
               calendar_type: calendar_type,
               sorted_events: sorted_events
           }
-      ) rescue 'НЕ ТРОГАЙ СВЕЧУ !!!'
+      )
+    #rescue 'НЕ ТРОГАЙ СВЕЧУ !!!'
     end
 
     def td_classes_for(day)
@@ -104,17 +105,20 @@ module Diary
       end
     end
 
-    # TODO нужно вместо START_DATE подсовывать range start_date_end_date
-    # TODO Иначе очень длинные события так и будут обрезаться на неделе
-    def attribute
-      options.fetch(:attribute, :start_date).to_sym
+    # TODO REFACTOR
+    def attribute1
+      options.fetch(:attribute1, :start_date).to_sym
+    end
+
+    def attribute2
+      options.fetch(:attribute2, :end_date).to_sym
     end
 
     def sorted_events
       events = options.fetch(:events, [])
 
-      scheduled = events.reject { |e| e.send(attribute).nil? }
-      scheduled.group_by { |e| e.send(attribute).to_date }
+      scheduled = events.reject { |e| e.send(attribute1).nil? }
+      scheduled.group_by { |e| e.send(attribute1).to_date..e.send(attribute2).to_date }
     end
 
   end

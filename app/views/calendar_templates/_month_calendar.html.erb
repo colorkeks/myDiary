@@ -60,22 +60,26 @@
                     </tr>
                     </thead>
                     <% week.each do |day| %>
-                        <!-- TODO НУЖНО ВСЕСТО START_DATE РАБОТАТЬ С RANGE START..END -->
-                        <!-- TODO И ЧЕКАТЬ НЕ ПО ДНЮ А НЕДЕЛЕ-->
-                        <% sorted_events.fetch(day, []).each do |event| %>
-                            <tr>
-                              <% week.each do |this_day| %>
-                                  <% if !((event.start_date.to_date..event.end_date.to_date) === this_day) %>
-                                      <td></td>
-                                  <% elsif event.start_date.to_date == this_day%>
-                                      <% max = 8 - event.start_date.to_date.wday %>
-                                      <% current = (event.end_date.to_date - event.start_date.to_date).to_i %>
-                                      <td class="event" colspan="<%= current > max ? max : current %>">
-                                        <%= event.title %>
-                                      </td>
+                        <!-- TODO ДОБАВИТЬ УСЛОВИЕ ALLDAY(будет меньше проблем в разрезе часов(week,day)), Добавить таблицу для ALLDAY-->
+                        <!-- TODO DRAG AND DROP (нужно больше боли !) -->
+                        <!-- TODO ADD RESIZABLE-->
+                        <!-- TODO ЕСЛИ НЕ ALLDAY ТО РЕСАЙЗИТЬ НЕЛЬЗЯ-->
+                        <% (sorted_events.select { |key| key === day }).each do |pair| %>
+                            <% event = pair.fetch(1).first%>
+                                <tr>
+                                  <% week.each do |this_day| %>
+                                      <% if !((event.start_date.to_date..event.end_date.to_date) === this_day) %>
+                                          <td></td>
+                                      <% else %>
+                                          <%# max = 8 - event.start_date.to_date.wday %>
+                                          <%# current = (event.end_date.to_date - event.start_date.to_date).to_i %>
+                                          <!--<td class="event" colspan="<%#= current > max ? max : current %>">-->
+                                          <td class="event">
+                                            <%= event.title %>
+                                          </td>
+                                      <% end %>
                                   <% end %>
-                              <% end %>
-                            </tr>
+                                </tr>
                         <% end %>
                     <% end %>
                   </table>

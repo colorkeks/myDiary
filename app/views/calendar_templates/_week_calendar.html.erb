@@ -68,15 +68,17 @@
                 <tr>
                   <td class="hours"></td>
                   <% date_range.slice(0, 7).each do |day| %>
-                      <% if sorted_events.fetch(day, []).empty? %>
+                      <% if  (sorted_events.select { |key| key === day }).empty? %>
                           <td></td>
                       <% else %>
                           <td>
                             <div style="position: relative">
                               <!--TODO СДЕЛАТЬ РАСЧЕТЫ ЧТОБЫ ABSOLUTE EVENTS НЕ НАСЛАИВАЛИСЬ ДРУГ НА ДРУГА( ПОКА БЕЗ ПОНЯТИЯ КАК ЭТО СДЕЛАТь)-->
-                              <!-- TODO НУЖНО ВСЕСТО START_DATE РАБОТАТЬ С RANGE START..END -->
+                              <!-- TODO ДОБАВИТЬ УСЛОВИЕ ALLDAY(будет меньше проблем в разрезе часов(week,day)), Добавить таблицу для ALLDAY-->
+                              <!-- TODO ADD RESIZABLE-->
                               <!-- TODO DRAG AND DROP (нужно больше боли !) -->
-                              <% sorted_events.fetch(day, []).each_with_index do |event, index| %>
+                              <% (sorted_events.select { |key| key === day }).each_with_index do |pair, index| %>
+                                  <% event = pair.fetch(1).first%>
                                   <% position = index.odd? ? 'right: ' + index.to_s + 'px' : 'left: ' + index.to_s + 'px'%>
                                   <% width =  (115/sorted_events.count).to_s + 'px' %>
                                   <% top_position = (event.start_date.hour + (event.start_date.strftime('%M').to_i)/60.0)*220-15 %>
