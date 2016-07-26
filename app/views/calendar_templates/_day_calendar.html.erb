@@ -1,0 +1,106 @@
+<div class="diary day_calendar">
+  <div class="calendar-head">
+    <div class="left-panel">
+      <%= link_to t('diary.previous', default: 'Пред.'), calendar.prev_page, class: 'btn btn-default' %>
+      <%= link_to t('diary.next', default: 'След.'), calendar.next_page, class: 'btn btn-default' %>
+      <%= link_to t('diary.today', default: 'Сегодня'), calendar.today, class: 'btn btn-default' %>
+    </div>
+    <span class="date-title"><%= start_date.strftime('%B %d, %Y') %></span>
+    <div class="right-panel">
+      <div class="btn-group">
+        <%= link_to t('diary.today', default: 'День'), calendar.to_calendar('day_calendar'), class: 'btn btn-default' %>
+        <%= link_to t('diary.today', default: 'Неделя'), calendar.to_calendar('week_calendar'), class: 'btn btn-default' %>
+        <%= link_to t('diary.today', default: 'Месяц'), calendar.to_calendar('month_calendar'), class: 'btn btn-default' %>
+      </div>
+    </div>
+  </div>
+
+  <table class="table day_table">
+    <thead>
+    <tr class="table-header">
+      <th class="hours">Hours</th>
+      <%= content_tag :th, class: calendar.td_classes_for(start_date) do %>
+          <%= start_date.strftime('%A') %>
+      <% end %>
+    </tr>
+    </thead>
+  </table>
+
+  <table class="table day_table">
+    <tbody>
+    <tr>
+      <td style="border: none">
+        <div style="position: relative">
+          <div style="position: relative;width: 100%;">
+            <div class="week-event-content">
+              <table class="table day_table">
+                <tbody>
+                <tr>
+                  <th class="hours"></th>
+                      <%= content_tag :th, class: calendar.td_classes_for(start_date) do %>
+                      <% end %>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+
+
+            <div style="position: relative">
+              <table class="day_table_row">
+                <% (0 .. 84600).step(1800) do |hour| %>
+                    <% time = Time.at(hour).utc %>
+                    <tr data-time="<%= time.strftime('%H:%M') %>">
+                      <td class="hours" style="z-index: 100"><%= time.strftime('%H:%M') %></td>
+                      <!--<td><%# block.call time, sorted_events.fetch(start_date, []) %></td>-->
+                      <td colspan="7"></td>
+                    </tr>
+                <% end %>
+              </table>
+            </div>
+
+            <div class="day-event-content">
+              <table class="table event_week_table">
+                <tbody>
+                <tr>
+                  <td class="hours"></td>
+                  <% if sorted_events.fetch(start_date, []).empty? %>
+                      <td></td>
+                  <% else %>
+                      <td>
+                        <div style="position: relative">
+                          <!--TODO СДЕЛАТЬ РАСЧЕТЫ ЧТОБЫ ABSOLUTE EVENTS НЕ НАСЛАИВАЛИСЬ ДРУГ НА ДРУГА( ПОКА БЕЗ ПОНЯТИЯ КАК ЭТО СДЕЛАТь)-->
+                          <!-- TODO НУЖНО ВСЕСТО START_DATE РАБОТАТЬ С RANGE START..END -->
+                          <% sorted_events.fetch(start_date, []).each_with_index do |event, index| %>
+                              <% position = index.odd? ? 'right: ' + index.to_s + 10.to_s + 'px' : 'left: ' + index.to_s + 10.to_s + 'px'%>
+                              <% width =  (800/sorted_events.count).to_s + 'px' %>
+                              <% top_position = (event.start_date.hour + (event.start_date.strftime('%M').to_i)/60.0)*220 %>
+
+                              <% if event.end_date.day - event.start_date.day == 0 %>
+                                  <% event_height = ((event.end_date.hour - event.start_date.hour) +
+                                      (event.end_date.strftime('%M').to_i - event.start_date.strftime('%M').to_i)/60.0)*220 %>
+                              <% else %>
+                                  <% event_height = (24 -(event.start_date.hour + (event.start_date.strftime('%M').to_i)/60.0))*220 %>
+                              <% end %>
+
+                              <div style="position: relative; display: inline-block">
+                                <div class="event" style="position: absolute; height: <%= event_height %>px; top:<%= top_position %>px; <%= position %>; width: <%= width %> ">
+                                  <%= event.title %>
+                                </div>
+                                <br>
+                              </div>
+                          <% end %>
+                        </div>
+                      </td>
+                  <% end %>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </td>
+
+    </tr>
+    </tbody>
+  </table>
+</div>

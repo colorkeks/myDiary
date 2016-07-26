@@ -1,0 +1,90 @@
+<div class="diary month_calendar">
+  <div class="calendar-head">
+    <div class="left-panel">
+      <%= link_to t('diary.previous', default: 'Пред.'), calendar.prev_page, class: 'btn btn-default' %>
+      <%= link_to t('diary.next', default: 'След.'), calendar.next_page, class: 'btn btn-default' %>
+      <%= link_to t('diary.today', default: 'Сегодня'), calendar.today, class: 'btn btn-default' %>
+    </div>
+    <span class="date-title"><%= start_date.strftime('%B %Y') %></span>
+    <div class="right-panel">
+      <div class="btn-group">
+        <%= link_to t('diary.today', default: 'День'), calendar.to_calendar('day_calendar'), class: 'btn btn-default' %>
+        <%= link_to t('diary.today', default: 'Неделя'), calendar.to_calendar('week_calendar'), class: 'btn btn-default' %>
+        <%= link_to t('diary.today', default: 'Месяц'), calendar.to_calendar('month_calendar'), class: 'btn btn-default' %>
+      </div>
+    </div>
+  </div>
+
+  <table class="table month_table">
+    <thead>
+    <tr class="table-header">
+      <td style="border: none">
+        <div>
+          <table>
+            <thead>
+            <% date_range.slice(0, 7).each do |day| %>
+                <th><%= t('date.abbr_day_names')[day.wday] %></th>
+            <% end %>
+            </thead>
+          </table>
+        </div>
+      </td>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr>
+      <td style="border: none">
+        <div style="position: relative">
+          <% date_range.each_slice(7) do |week| %>
+              <div style="position: relative">
+                <div>
+                  <table class="month_table_row">
+                    <tr>
+                      <% week.each do |day| %>
+                          <%= content_tag :td, class: calendar.td_classes_for(day), data: {date: day} do %>
+                          <% end %>
+                      <% end %>
+                    </tr>
+                  </table>
+                </div>
+                <div class="event-content-container">
+                  <table class="month_table_row">
+                    <thead>
+                    <tr>
+                      <% week.each do |day| %>
+                          <%= content_tag :th, class: calendar.td_classes_for(day), data: {date: day} do %>
+                              <% block.call day.strftime('%d') %>
+                          <% end %>
+                      <% end %>
+                    </tr>
+                    </thead>
+                    <% week.each do |day| %>
+                        <!-- TODO НУЖНО ВСЕСТО START_DATE РАБОТАТЬ С RANGE START..END -->
+                        <!-- TODO И ЧЕКАТЬ НЕ ПО ДНЮ А НЕДЕЛЕ-->
+                        <% sorted_events.fetch(day, []).each do |event| %>
+                            <tr>
+                              <% week.each do |this_day| %>
+                                  <% if !((event.start_date.to_date..event.end_date.to_date) === this_day) %>
+                                      <td></td>
+                                  <% elsif event.start_date.to_date == this_day%>
+                                      <% max = 8 - event.start_date.to_date.wday %>
+                                      <% current = (event.end_date.to_date - event.start_date.to_date).to_i %>
+                                      <td class="event" colspan="<%= current > max ? max : current %>">
+                                        <%= event.title %>
+                                      </td>
+                                  <% end %>
+                              <% end %>
+                            </tr>
+                        <% end %>
+                    <% end %>
+                  </table>
+                </div>
+              </div>
+          <% end %>
+        </div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
