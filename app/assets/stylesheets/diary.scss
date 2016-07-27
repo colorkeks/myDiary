@@ -45,10 +45,15 @@ td {
   text-align: center;
   border: 1px solid grey;
   border-top: none;
+  width: 110px;
 }
 
 .hours {
   width: 50px;
+}
+
+.day{
+  width: 110px;
 }
 
 .table{
@@ -56,6 +61,16 @@ td {
     background: transparent;
   }
 
+
+  .week_table_row{
+    .hours {
+      width: 52px;
+    }
+
+    td{
+      width: inherit;
+    }
+  }
 
   &.week_table, &.day_table{
     margin-bottom: 0;
@@ -85,6 +100,7 @@ td {
     color: #ffffff;
     background: #20a9af;
     border-radius: 5px;
+    text-align: left;
     border: 1px solid black !important;
   }
 
@@ -107,6 +123,13 @@ td {
     top: 0;
     left: 0;
     right: 0;
+    max-height: 110px;
+    height: 100%;
+    overflow-y: scroll;
+
+    &.scrollable{
+      width: 862px
+    }
 
     th{
       padding: 0 2px;
@@ -139,8 +162,22 @@ td {
 
 }
 
+.table-header{
+  border-top: 1px solid grey ;
+}
 
-.month_table_row, .day_table_row{
+.day_table{
+  .hours{
+    width: 52px;
+  }
+
+  td{
+    width: inherit;
+  }
+}
+
+
+.month_table_row, .week_table_row, .day_table_row{
   td{
     height: 110px;
   }

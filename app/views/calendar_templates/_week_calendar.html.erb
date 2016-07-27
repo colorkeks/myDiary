@@ -18,9 +18,9 @@
   <table class="table week_table">
     <thead>
     <tr class="table-header">
-      <th class="hours">Hours</th>
+      <td class="hours">Hours</td>
       <% date_range.slice(0, 7).each do |day| %>
-          <%= content_tag :th, class: calendar.td_classes_for(day) do %>
+          <%= content_tag :td, class: calendar.td_classes_for(day) do %>
               <%= day.strftime('%A %d') %>
           <% end %>
       <% end %>
@@ -39,9 +39,9 @@
               <table class="table week_table">
                 <tbody>
                 <tr>
-                  <th class="hours"></th>
+                  <td class="hours"></td>
                   <% date_range.slice(0, 7).each do |day| %>
-                      <%= content_tag :th, class: calendar.td_classes_for(day) do %>
+                      <%= content_tag :td, class: calendar.td_classes_for(day) do %>
                       <% end %>
                   <% end %>
                 </tr>
@@ -51,7 +51,7 @@
 
 
             <div style="position: relative">
-              <table class="month_table_row">
+              <table class="week_table_row">
                 <% (0 .. 84600).step(1800) do |hour| %>
                     <% time = Time.at(hour).utc %>
                     <tr data-time="<%= time.strftime('%H:%M') %>">

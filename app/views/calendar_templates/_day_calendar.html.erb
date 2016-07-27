@@ -18,8 +18,8 @@
   <table class="table day_table">
     <thead>
     <tr class="table-header">
-      <th class="hours">Hours</th>
-      <%= content_tag :th, class: calendar.td_classes_for(start_date) do %>
+      <td class="hours">Hours</td>
+      <%= content_tag :td, class: calendar.td_classes_for(start_date) do %>
           <%= start_date.strftime('%A') %>
       <% end %>
     </tr>
@@ -31,13 +31,12 @@
     <tr>
       <td style="border: none">
         <div style="position: relative">
-          <div style="position: relative;width: 100%;">
             <div class="week-event-content">
               <table class="table day_table">
                 <tbody>
                 <tr>
-                  <th class="hours"></th>
-                      <%= content_tag :th, class: calendar.td_classes_for(start_date) do %>
+                  <td class="hours"></td>
+                      <%= content_tag :td, class: calendar.td_classes_for(start_date) do %>
                       <% end %>
                 </tr>
                 </tbody>
@@ -74,6 +73,7 @@
                           <!-- TODO DRAG AND DROP (нужно больше боли !) -->
                           <% (sorted_events.select { |key| key === start_date }).each_with_index do |pair, index| %>
                               <% event = pair.fetch(1).first%>
+                              <% position = index.odd? ? 'right: ' + index.to_s + 'px' : 'left: ' + index.to_s + 'px'%>
                               <% width =  (800/sorted_events.count).to_s + 'px' %>
                               <% top_position = (event.start_date.hour + (event.start_date.strftime('%M').to_i)/60.0)*220 %>
 
@@ -85,7 +85,7 @@
                               <% end %>
 
                               <div style="position: relative; display: inline-block">
-                                <div class="event" style="position: absolute; height: <%= event_height %>px; top:<%= top_position %>px; width: <%= width %> ">
+                                <div class="event" style="position: absolute; height: <%= event_height %>px; <%= position %>;  top:<%= top_position %>px; width: <%= width %> ">
                                   <%= event.title %>
                                 </div>
                                 <br>
@@ -98,7 +98,6 @@
                 </tbody>
               </table>
             </div>
-          </div>
         </div>
       </td>
 

@@ -23,7 +23,7 @@
           <table>
             <thead>
             <% date_range.slice(0, 7).each do |day| %>
-                <th><%= t('date.abbr_day_names')[day.wday] %></th>
+                <td><%= t('date.abbr_day_names')[day.wday] %></td>
             <% end %>
             </thead>
           </table>
@@ -48,7 +48,7 @@
                     </tr>
                   </table>
                 </div>
-                <div class="event-content-container">
+                <div class="event-content-container scrollable">
                   <table class="month_table_row">
                     <thead>
                     <tr>
@@ -59,27 +59,45 @@
                       <% end %>
                     </tr>
                     </thead>
-                    <% week.each do |day| %>
-                        <!-- TODO ДОБАВИТЬ УСЛОВИЕ ALLDAY(будет меньше проблем в разрезе часов(week,day)), Добавить таблицу для ALLDAY-->
-                        <!-- TODO DRAG AND DROP (нужно больше боли !) -->
-                        <!-- TODO ADD RESIZABLE-->
-                        <!-- TODO ЕСЛИ НЕ ALLDAY ТО РЕСАЙЗИТЬ НЕЛЬЗЯ-->
-                        <% (sorted_events.select { |key| key === day }).each do |pair| %>
-                            <% event = pair.fetch(1).first%>
-                                <tr>
-                                  <% week.each do |this_day| %>
-                                      <% if !((event.start_date.to_date..event.end_date.to_date) === this_day) %>
-                                          <td></td>
-                                      <% else %>
-                                          <%# max = 8 - event.start_date.to_date.wday %>
-                                          <%# current = (event.end_date.to_date - event.start_date.to_date).to_i %>
-                                          <!--<td class="event" colspan="<%#= current > max ? max : current %>">-->
-                                          <td class="event">
-                                            <%= event.title %>
-                                          </td>
-                                      <% end %>
+                    <!-- TODO ДОБАВИТЬ УСЛОВИЕ ALLDAY(будет меньше проблем в разрезе часов(week,day)), Добавить таблицу для ALLDAY-->
+                    <!-- TODO DRAG AND DROP (нужно больше боли !) -->
+                    <!-- TODO ADD RESIZABLE-->
+                    <!-- TODO ЕСЛИ НЕ ALLDAY ТО РЕСАЙЗИТЬ НЕЛЬЗЯ-->
+                    <% (sorted_events.select { |key| !(key.to_a & week.to_a).empty? }).each do |pair| %>
+                        <% key = pair.fetch(0) %>
+
+                        <% pair.fetch(1).each do |event| %>
+                            <% start_date = event.start_date.to_date %>
+                            <% end_date = event.end_date.to_date %>
+                            <% start_included = week.include?(start_date) %>
+                            <% end_included = week.include?(end_date) %>
+                            <% start_date_wday = (start_date.wday + 6) % 7%>
+                            <% end_date_wday = 1 + (end_date.wday + 6) % 7%>
+                            <tr>
+                              <% if week.to_a.include?(start_date) %>
+                                  <% (start_date_wday).times do %>
+                                      <td></td>
                                   <% end %>
-                                </tr>
+                              <% end %>
+
+                              <!--Если начало и конец на одной неделе-->
+                              <% if start_included && end_included%>
+                              <td class="event" colspan="<%= end_date_wday - start_date_wday %>">
+                              <!--Для длительных событый которые занимают всю неделю+ -->
+                              <% elsif key.include?(week.first) && key.include?(week.last) %>
+                                  <td class="event" colspan="7">
+                              <!--Если только начало на этой неделе-->
+                              <% elsif start_included %>
+                                  <% max = 7 - start_date_wday %>
+                                  <% current = (end_date - start_date).to_i %>
+                                  <td class="event" colspan="<%= current > max ? max : current %>">
+                              <!--Если только конец на этой неделе-->
+                              <% elsif end_included %>
+                                  <td class="event" colspan="<%= end_date_wday %>">
+                              <% end %>
+                                <%= event.title %>
+                                </td>
+                            </tr>
                         <% end %>
                     <% end %>
                   </table>
