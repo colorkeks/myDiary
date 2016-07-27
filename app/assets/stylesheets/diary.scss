@@ -4,12 +4,11 @@
   vertical-align: middle;
 }
 
-.content-container{
+.content-container {
   position: absolute;
   left: 0;
   right: 0;
 }
-
 
 .calendar-head {
   text-align: center;
@@ -29,7 +28,7 @@
   }
 }
 
-table{
+table {
   width: 100%;
   box-sizing: border-box;
   table-layout: fixed;
@@ -38,7 +37,6 @@ table{
   font-size: 1em;
 
 }
-
 
 td {
   padding: 0 !important;
@@ -52,51 +50,51 @@ td {
   width: 50px;
 }
 
-.day{
+.day {
   width: 110px;
 }
 
-.table{
-  &.event_week_table{
+.table {
+  &.event_week_table, &.event_day_table {
     background: transparent;
   }
 
-
-  .week_table_row{
+  .week_table_row {
     .hours {
       width: 52px;
     }
 
-    td{
+    td {
       width: inherit;
     }
   }
 
-  &.week_table, &.day_table{
+  &.week_table, &.day_table {
     margin-bottom: 0;
     margin-top: 0;
 
-
-    .week-event-content, .day-event-content{
+    .week-event-content, .day-event-content {
       position: absolute;
       width: 100%;
       height: 100%;
       top: 0;
       left: 0;
       right: 0;
+      z-index: 0;
 
-      table{
+      table {
         height: 100%;
       }
     }
 
-    th{
+    th {
       border: 1px solid grey !important;
     }
   }
 
-  .event{
+  .event {
     min-width: 50px;
+    height: 20px;
     color: #ffffff;
     background: #20a9af;
     border-radius: 5px;
@@ -104,21 +102,19 @@ td {
     border: 1px solid black !important;
   }
 
-
   thead {
 
     .current_day {
       text-align: center;
     }
 
-
-      th {
-        text-align: center;
-        border: 1px solid grey;
-      }
+    th {
+      text-align: center;
+      border: 1px solid grey;
+    }
 
   }
-  .event-content-container{
+  .event-content-container {
     position: absolute;
     top: 0;
     left: 0;
@@ -127,26 +123,24 @@ td {
     height: 100%;
     overflow-y: scroll;
 
-    &.scrollable{
+    &.scrollable {
       width: 862px
     }
 
-    th{
+    th {
       padding: 0 2px;
       text-align: right;
       border-top: none;
       border-bottom: none;
     }
 
-
-    td{
+    td {
       height: 10px;
       border-top: none;
       border-bottom: none;
     }
 
   }
-
 
   .today {
     background: #71ffa7
@@ -162,23 +156,63 @@ td {
 
 }
 
-.table-header{
-  border-top: 1px solid grey ;
+.table-header {
+  border-top: 1px solid grey;
 }
 
-.day_table{
-  .hours{
+.day_table {
+  .hours {
     width: 52px;
   }
 
-  td{
+  td {
     width: inherit;
   }
 }
 
+.all_day_row {
+  position: relative;
+  z-index: 5;
 
-.month_table_row, .week_table_row, .day_table_row{
-  td{
+  .all_day_table {
+    border-bottom: 5px solid #8d8d8d;
+
+    .hours {
+      width: 52px;
+    }
+
+    td {
+      width: inherit;
+    }
+
+    .all_day_scrollable {
+      height: 120px;
+      overflow-y: auto;
+      overflow-x: hidden;
+
+      td{
+        border: none;
+      }
+
+      .event{
+        margin: 2px 0 2px 0;
+      }
+    }
+  }
+}
+
+.scrollable{
+  height: 600px;
+  width: 862px;
+  overflow-y: auto;
+}
+
+.diary{
+  width: 847px;
+}
+
+.month_table_row, .week_table_row, .day_table_row {
+  td {
     height: 110px;
   }
 }

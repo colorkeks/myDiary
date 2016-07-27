@@ -59,10 +59,10 @@
                       <% end %>
                     </tr>
                     </thead>
-                    <!-- TODO ДОБАВИТЬ УСЛОВИЕ ALLDAY(будет меньше проблем в разрезе часов(week,day)), Добавить таблицу для ALLDAY-->
                     <!-- TODO DRAG AND DROP (нужно больше боли !) -->
                     <!-- TODO ADD RESIZABLE-->
                     <!-- TODO ЕСЛИ НЕ ALLDAY ТО РЕСАЙЗИТЬ НЕЛЬЗЯ-->
+                    <!-- TODO ПРИДУМАТЬ КУДА ДЕТЬ ЭТОТ КОД (ТАКОЙ-ЖЕ В WEEK_CALENDAR) МБ ЗАПИХАТЬ В КАКОЙ_НИТЬ ХЭЛПЕР ИЛИ ПРОСТО PARTIAL-->
                     <% (sorted_events.select { |key| !(key.to_a & week.to_a).empty? }).each do |pair| %>
                         <% key = pair.fetch(0) %>
 
