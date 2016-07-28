@@ -57,6 +57,8 @@ td {
 .table {
   &.event_week_table, &.event_day_table {
     background: transparent;
+    margin-bottom: 0;
+
   }
 
   .week_table_row {
@@ -99,6 +101,7 @@ td {
     background: #20a9af;
     border-radius: 5px;
     text-align: left;
+    margin: 1px 0 1px 0;
     border: 1px solid black !important;
   }
 
@@ -192,10 +195,6 @@ td {
 
       td{
         border: none;
-      }
-
-      .event{
-        margin: 2px 0 2px 0;
       }
     }
   }

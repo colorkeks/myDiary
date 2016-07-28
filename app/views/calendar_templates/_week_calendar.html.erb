@@ -33,8 +33,7 @@
     <tbody>
     <tr>
       <td style="border: none">
-        <div style="position: relative">
-          <div style="position: relative;width: 100%;">
+          <div style="position: relative">
             <div class="week-event-content">
               <table class="table week_table">
                 <tbody>
@@ -60,44 +59,7 @@
                         <!-- TODO DRAG AND DROP (нужно больше боли !) -->
                         <!-- TODO ADD RESIZABLE-->
                         <!-- TODO ЕСЛИ НЕ ALLDAY ТО РЕСАЙЗИТЬ НЕЛЬЗЯ-->
-                        <!-- TODO ПРИДУМАТЬ КУДА ДЕТЬ ЭТОТ КОД (ТАКОЙ-ЖЕ В MONTH_CALENDAR) МБ ЗАПИХАТЬ В КАКОЙ_НИТЬ ХЭЛПЕР ИЛИ ПРОСТО PARTIAL-->
-                        <% (sorted_events.select { |key| !(key.to_a & date_range.to_a).empty? }).each do |pair| %>
-                            <% key = pair.fetch(0) %>
-
-                            <% pair.fetch(1).each do |event| %>
-                                <% start_date = event.start_date.to_date %>
-                                <% end_date = event.end_date.to_date %>
-                                <% start_included = date_range.include?(start_date) %>
-                                <% end_included = date_range.include?(end_date) %>
-                                <% start_date_wday = (start_date.wday + 6) % 7 %>
-                                <% end_date_wday = 1 + (end_date.wday + 6) % 7 %>
-                                <tr>
-                                  <% if date_range.to_a.include?(start_date) %>
-                                      <% (start_date_wday).times do %>
-                                          <td></td>
-                                      <% end %>
-                                  <% end %>
-
-                                  <!--Если начало и конец на одной неделе-->
-                                  <% if start_included && end_included %>
-                                      <td class="event" colspan="<%= end_date_wday - start_date_wday %>">
-                                        <!--Для длительных событый которые занимают всю неделю+ -->
-                                  <% elsif key.include?(date_range.first) && key.include?(date_range.last) %>
-                                      <td class="event" colspan="7">
-                                        <!--Если только начало на этой неделе-->
-                                  <% elsif start_included %>
-                                      <% max = 7 - start_date_wday %>
-                                      <% current = (end_date - start_date).to_i %>
-                                      <td class="event" colspan="<%= current > max ? max : current %>">
-                                        <!--Если только конец на этой неделе-->
-                                  <% elsif end_included %>
-                                      <td class="event" colspan="<%= end_date_wday %>">
-                                  <% end %>
-                                  <%= event.title %>
-                                  </td>
-                                </tr>
-                            <% end %>
-                        <% end %>
+                        <%= render partial: 'calendar_templates/events_template', locals: {sorted_events: sorted_events, date_range: date_range} %>
                         </tbody>
                       </table>
                     </div>
@@ -107,8 +69,6 @@
             </div>
 
             <div class="scrollable">
-              <div style="position: relative">
-
                 <div style="position: relative">
                   <table class="week_table_row">
                     <% (0 .. 84600).step(1800) do |hour| %>
@@ -119,57 +79,56 @@
                         </tr>
                     <% end %>
                   </table>
-                </div>
 
-                <div class="week-event-content">
-                  <table class="table event_week_table">
-                    <tbody>
-                    <tr>
-                      <td class="hours"></td>
-                      <% date_range.slice(0, 7).each do |day| %>
-                          <% if (sorted_events.select { |key| key === day }).empty? %>
-                              <td></td>
-                          <% else %>
-                              <td>
-                                <div style="position: relative">
-                                  <!--TODO СДЕЛАТЬ РАСЧЕТЫ ЧТОБЫ ABSOLUTE EVENTS НЕ НАСЛАИВАЛИСЬ ДРУГ НА ДРУГА( ПОКА БЕЗ ПОНЯТИЯ КАК ЭТО СДЕЛАТь)-->
-                                  <!-- TODO ADD RESIZABLE-->
-                                  <!-- TODO DRAG AND DROP (нужно больше боли !) -->
-                                  <% (sorted_events.select { |key| key === start_date }).each do |pair| %>
-                                      <% pair.fetch(1).each_with_index do |event, index| %>
-                                          <% next if event.all_day %>
 
-                                          <% position = index.odd? ? 'right: ' + index.to_s + 'px' : 'left: ' + index.to_s + 'px' %>
-                                          <% width = (115/sorted_events.count).to_s + 'px' %>
-                                          <% top_position = (event.start_date.hour + (event.start_date.strftime('%M').to_i)/60.0)*220-15 %>
+                  <div class="week-event-content">
+                    <table class="table event_week_table">
+                      <tbody>
+                      <tr>
+                        <td class="hours"></td>
+                        <% date_range.slice(0, 7).each do |day| %>
+                            <% if (sorted_events.select { |key| key === day }).empty? %>
+                                <td></td>
+                            <% else %>
+                                <td>
+                                  <div style="position: relative">
+                                    <!--TODO СДЕЛАТЬ РАСЧЕТЫ ЧТОБЫ ABSOLUTE EVENTS НЕ НАСЛАИВАЛИСЬ ДРУГ НА ДРУГА( ПОКА БЕЗ ПОНЯТИЯ КАК ЭТО СДЕЛАТь)-->
+                                    <!-- TODO ADD RESIZABLE-->
+                                    <!-- TODO DRAG AND DROP (нужно больше боли !) -->
+                                    <% (sorted_events.select { |key| key === start_date }).each do |pair| %>
+                                        <% pair.fetch(1).each_with_index do |event, index| %>
+                                            <% next if event.all_day %>
 
-                                          <% if event.end_date.day - event.start_date.day == 0 %>
-                                              <% event_height = ((event.end_date.hour - event.start_date.hour) +
-                                                  (event.end_date.strftime('%M').to_i - event.start_date.strftime('%M').to_i)/60.0)*220 %>
-                                          <% else %>
-                                              <% event_height = (24 -(event.start_date.hour + (event.start_date.strftime('%M').to_i)/60.0))*220 %>
-                                          <% end %>
+                                            <% position = index.odd? ? 'right: ' + index.to_s + 'px' : 'left: ' + index.to_s + 'px' %>
+                                            <% width = (115/sorted_events.count).to_s + 'px' %>
+                                            <% top_position = (event.start_date.hour + (event.start_date.strftime('%M').to_i)/60.0)*220-15 %>
 
-                                          <div style="position: relative; display: inline-block">
-                                            <div class="event" style="position: absolute; height: <%= event_height %>px; top:<%= top_position %>px; <%= position %>; width: <%= width %> ">
-                                              <%= event.title %>
+                                            <% if event.end_date.day - event.start_date.day == 0 %>
+                                                <% event_height = ((event.end_date.hour - event.start_date.hour) +
+                                                    (event.end_date.strftime('%M').to_i - event.start_date.strftime('%M').to_i)/60.0)*220 %>
+                                            <% else %>
+                                                <% event_height = (24 -(event.start_date.hour + (event.start_date.strftime('%M').to_i)/60.0))*220 %>
+                                            <% end %>
+
+                                            <div style="position: relative; display: inline-block">
+                                              <div class="event" style="position: absolute; height: <%= event_height %>px; top:<%= top_position %>px; <%= position %>; width: <%= width %> ">
+                                                <%= event.title %>
+                                              </div>
                                             </div>
-                                          </div>
-                                      <% end %>
-                                  <% end %>
-                                </div>
-                              </td>
-                          <% end %>
-                      <% end %>
-                    </tr>
-                    </tbody>
-                  </table>
-                </div>
+                                        <% end %>
+                                    <% end %>
+                                  </div>
+                                </td>
+                            <% end %>
+                        <% end %>
+                      </tr>
+                      </tbody>
+                    </table>
+                  </div>
               </div>
             </div>
 
           </div>
-        </div>
       </td>
 
     </tr>

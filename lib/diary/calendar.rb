@@ -106,19 +106,15 @@ module Diary
     end
 
     # TODO REFACTOR
-    def attribute1
-      options.fetch(:attribute1, :start_date).to_sym
-    end
-
-    def attribute2
-      options.fetch(:attribute2, :end_date).to_sym
+    def attributes(date)
+      options.fetch(:date, date).to_sym
     end
 
     def sorted_events
       events = options.fetch(:events, [])
 
-      scheduled = events.reject { |e| e.send(attribute1).nil? }
-      scheduled.group_by { |e| e.send(attribute1).to_date..e.send(attribute2).to_date }
+      scheduled = events.reject { |e| e.send(attributes(:start_date)).nil? || e.send(attributes(:end_date)).nil? }
+      scheduled.group_by { |e| e.send(attributes(:start_date)).to_date..e.send(attributes(:end_date)).to_date }
     end
 
   end
