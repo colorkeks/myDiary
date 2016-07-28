@@ -46,9 +46,9 @@ $(function() {
 
             $.ajax({
                 type: "POST",
-                url: "/calendar_event/" + event_id,
-                contentType: 'application/json',
-                data: JSON.stringify({ calendar_event:{start_date: start_date, end_date: end_date}, _method:'put' })
+                url: "/calendar_event/" + event_id + "/ajax_update",
+                dataType: 'JSON',
+                data: {calendar_event:{start_date: start_date, end_date: end_date}, _method: 'put'}
             }).done(function( result ) {
                 console.log(result)
             });
