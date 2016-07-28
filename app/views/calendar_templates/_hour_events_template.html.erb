@@ -1,0 +1,34 @@
+<% all_events = sorted_events.select { |key| key === day } %>
+<% if all_events.empty? %>
+    <td></td>
+<% else %>
+    <td>
+      <div style="position: relative; width: 100%">
+        <!--TODO СДЕЛАТЬ РАСЧЕТЫ ЧТОБЫ ЭВЕНТЫ АДАПТИВНО РАСПОЛАГАЛИСЬ(КАК В FULLCALENDAR НАПРИМЕР)-->
+        <!-- TODO ADD RESIZABLE-->
+        <!-- TODO DRAG AND DROP (нужно больше боли !) -->
+        <% all_events.each do |pair| %>
+            <% day_events = pair.fetch(1).select { |event| !event.all_day } %>
+            <% day_events.each_with_index do |event, index| %>
+
+                <% position = index.odd? ? 'right: ' + index.to_s + 'px' : 'left: ' + index.to_s + 'px' %>
+                <% width = (100/day_events.count).to_s + '%' %>
+                <% top_position = (event.start_date.hour + (event.start_date.strftime('%M').to_i)/60.0)*220-15 %>
+
+                <% if event.end_date.day - event.start_date.day == 0 %>
+                    <% event_height = ((event.end_date.hour - event.start_date.hour) +
+                        (event.end_date.strftime('%M').to_i - event.start_date.strftime('%M').to_i)/60.0)*220 %>
+                <% else %>
+                    <% event_height = (24 -(event.start_date.hour + (event.start_date.strftime('%M').to_i)/60.0))*220 %>
+                <% end %>
+
+                <div style="position: relative; width: 100%; display: inline-block">
+                  <div class="event" style="position: absolute; height: <%= event_height %>px; top:<%= top_position %>px; <%= position %>; width: <%= width %> ">
+                    <%= event.title %>
+                  </div>
+                </div>
+            <% end %>
+        <% end %>
+      </div>
+    </td>
+<% end %>

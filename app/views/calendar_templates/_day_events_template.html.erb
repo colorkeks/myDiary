@@ -1,8 +1,4 @@
-<% (sorted_events.select { |key| !(key.to_a & date_range.to_a).empty? }).each do |pair| %>
-    <% key = pair.fetch(0) %>
-    <% events = pair.fetch(1) %>
-
-    <% events.each do |event| %>
+ <% events.each do |event| %>
         <% start_date = event.start_date.to_date %>
         <% end_date = event.end_date.to_date %>
         <% start_included = date_range.include?(start_date) %>
@@ -32,5 +28,4 @@
           <div class="event"><%= event.title %></div>
           </td>
         </tr>
-    <% end %>
-<% end %>
+ <% end %>

@@ -62,7 +62,11 @@
                     <!-- TODO DRAG AND DROP (нужно больше боли !) -->
                     <!-- TODO ADD RESIZABLE-->
                     <!-- TODO ЕСЛИ НЕ ALLDAY ТО РЕСАЙЗИТЬ НЕЛЬЗЯ-->
-                    <%= render partial: 'calendar_templates/events_template', locals: {sorted_events: sorted_events, date_range: week} %>
+                    <% (sorted_events.select { |key| !(key.to_a & week.to_a).empty? }).each do |pair| %>
+                        <% key = pair.fetch(0) %>
+                        <% events = pair.fetch(1).select %>
+                        <%= render partial: 'calendar_templates/day_events_template', locals: {key: key, events: events, date_range: week} %>
+                    <% end %>
                   </table>
                 </div>
               </div>
