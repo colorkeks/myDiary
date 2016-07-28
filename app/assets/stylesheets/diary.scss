@@ -103,6 +103,10 @@ td {
     text-align: left;
     margin: 1px 0 1px 0;
     border: 1px solid black !important;
+
+    &.hour-event{
+      margin: 0;
+    }
   }
 
   thead {
