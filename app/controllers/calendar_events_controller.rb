@@ -37,6 +37,10 @@ class CalendarEventsController < ApplicationController
     end
   end
 
+  def ajax_update
+    #TODO SAVE EVENT
+  end
+
   # PATCH/PUT /calendar_events/1
   # PATCH/PUT /calendar_events/1.json
   def update

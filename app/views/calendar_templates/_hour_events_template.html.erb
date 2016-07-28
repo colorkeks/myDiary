@@ -22,7 +22,7 @@
                     <% event_height = (24 -(event.start_date.hour + (event.start_date.strftime('%M').to_i)/60.0))*220 %>
                 <% end %>
 
-                  <div class="event hour-event" id="<%= event.id%>" style="position: absolute; height: <%= event_height %>px; top:<%= top_position %>px; <%= position %>; width: <%= width %> ">
+                  <div class="event hour-event" data-start-date="<%= event.start_date%>" data-end-date="<%= event.end_date%>" id="<%= event.id%>" style="position: absolute; height: <%= event_height %>px; top:<%= top_position %>px; <%= position %>; width: <%= width %> ">
                     <%= event.title %>
                   </div>
             <% end %>
