@@ -4,8 +4,6 @@
 <% else %>
     <td style="position: relative;">
       <!--TODO СДЕЛАТЬ РАСЧЕТЫ ЧТОБЫ ЭВЕНТЫ АДАПТИВНО РАСПОЛАГАЛИСЬ(КАК В FULLCALENDAR НАПРИМЕР)-->
-      <!-- TODO ADD RESIZABLE-->
-      <!-- TODO DRAG AND DROP (нужно больше боли !) -->
       <% all_events.each do |pair| %>
           <% day_events = pair.fetch(1).select { |event| !event.all_day } %>
           <% day_events.each_with_index do |event, index| %>

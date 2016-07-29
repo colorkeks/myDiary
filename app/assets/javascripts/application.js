@@ -13,17 +13,25 @@
 //= require jquery
 //= require jquery_ujs
 //= require jquery-ui
+//= require turbolinks
 //= require twitter/bootstrap
 //= require_tree .
 
 
-$(function() {
+$(document).on('turbolinks:load', function () {
+
     $('.hour-event').draggable({
         axis: "y",
         containment: "parent",
         stop: function (event, ui) {
             var height = ui.helper.height();
-            calc_datetime(event, ui, height)
+            var dates = calc_datetime(event, ui, height);
+            ajax_event_update(event.target.id, dates[0], dates[1])
+        },
+        drag: function (event, ui) {
+            var height = ui.helper.height();
+            var dates = calc_datetime(event, ui, height);
+            change_event_time(event, dates[0], dates[1]);
         }
     });
 
@@ -33,13 +41,18 @@ $(function() {
         containment: "parent",
         stop: function (event, ui) {
             var height = ui.size.height;        //нет бы сделать как в resizable
-            calc_datetime(event, ui, height)
+            var dates = calc_datetime(event, ui, height);
+            ajax_event_update(event.target.id, dates[0], dates[1])
+        },
+        resize: function (event, ui) {
+            var height = ui.size.height;        //нет бы сделать как в resizable
+            var dates = calc_datetime(event, ui, height);
+            change_event_time(event, dates[0], dates[1]);
         }
     });
 
 
     function calc_datetime(event, ui, height) {
-        var event_id = event.target.id;
         var start_date = new Date($(event.target).data('start-date'));
         var end_date = new Date($(event.target).data('end-date'));
 
@@ -59,16 +72,29 @@ $(function() {
         start_date.setMinutes(startMinute);
         end_date.setHours(endHour);
         end_date.setMinutes(endMinute);
-        $(event.target).find('.start_date').text(start_date.getHours() + ':' + start_date.getMinutes() + ' - ');
-        $(event.target).find('.end_date').text(end_date.getHours() + ':' + end_date.getMinutes());
 
+        return [start_date, end_date];
+    }
+
+    function ajax_event_update(event_id, start_date, end_date) {
         $.ajax({
             type: "POST",
             url: "/calendar_events/" + event_id + "/ajax_update"  ,
             dataType: 'JSON',
-            data: {calendar_event:{start_date: start_date, end_date: end_date, all_day: (start_date.getDate() != end_date.getDate())}, _method: 'put'}
+            data: {calendar_event:{start_date: start_date, end_date: end_date, all_day: false}, _method: 'put'}
         }).done(function( result ) {
             (console.log(result))
         });
+    }
+
+
+    function change_event_time(event, start_date, end_date) {
+        $(event.target).find('.start_date').text(AddZero(start_date.getHours()) + ':' + AddZero(start_date.getMinutes()) + ' - ');
+        $(event.target).find('.end_date').text(AddZero(end_date.getHours()) + ':' + AddZero(end_date.getMinutes()));
+    }
+
+
+    function AddZero(num) {
+        return (num >= 0 && num < 10) ? "0" + num : num + "";
     }
 });
