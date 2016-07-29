@@ -21,8 +21,7 @@ module Diary
               calendar_type: calendar_type,
               sorted_events: sorted_events
           }
-      )
-    #rescue 'НЕ ТРОГАЙ СВЕЧУ !!!'
+      ) rescue 'НЕ ТРОГАЙ СВЕЧУ !!!'
     end
 
     def td_classes_for(day)
