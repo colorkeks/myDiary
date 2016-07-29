@@ -48,6 +48,7 @@
                     </tr>
                   </table>
                 </div>
+                <!--TODO СДЕЛАТЬ ТАК ЧТОБЫ СКРОЛИЛОСЬ ТОЛЬКО ТЕЛО-->
                 <div class="event-content-container scrollable">
                   <table class="month_table_row">
                     <thead>
@@ -59,6 +60,7 @@
                       <% end %>
                     </tr>
                     </thead>
+                    <tbody>
                     <!-- TODO DRAG AND DROP (нужно больше боли !) -->
                     <!-- TODO ADD RESIZABLE-->
                     <!-- TODO ЕСЛИ НЕ ALLDAY ТО РЕСАЙЗИТЬ НЕЛЬЗЯ-->
@@ -67,6 +69,7 @@
                         <% events = pair.fetch(1).select %>
                         <%= render partial: 'calendar_templates/day_events_template', locals: {key: key, events: events, date_range: week} %>
                     <% end %>
+                    </tbody>
                   </table>
                 </div>
               </div>
