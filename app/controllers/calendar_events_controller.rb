@@ -1,5 +1,5 @@
 class CalendarEventsController < ApplicationController
-  before_action :set_calendar_event, only: [:show, :edit, :update, :destroy]
+  before_action :set_calendar_event, only: [:ajax_update, :show, :edit, :update, :destroy]
 
   # GET /calendar_events
   # GET /calendar_events.json
@@ -38,7 +38,13 @@ class CalendarEventsController < ApplicationController
   end
 
   def ajax_update
-    #TODO SAVE EVENT
+    if request.xhr?
+      if @calendar_event.update(calendar_event_params)
+        render json: {status: 'success', message: 'Event saved!'}
+      else
+        render json: {status: 'failure', message: 'Event save error!'}
+      end
+    end
   end
 
   # PATCH/PUT /calendar_events/1
@@ -66,13 +72,13 @@ class CalendarEventsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_calendar_event
-      @calendar_event = CalendarEvent.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_calendar_event
+    @calendar_event = CalendarEvent.find(params[:id])
+  end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def calendar_event_params
-      params.require(:calendar_event).permit(:title, :all_day, :start_date, :end_date)
-    end
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def calendar_event_params
+    params.require(:calendar_event).permit(:title, :all_day, :start_date, :end_date)
+  end
 end

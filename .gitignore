@@ -17,4 +17,5 @@
 /tmp
 .iml
 .idea
+.lock
 /schema.rb

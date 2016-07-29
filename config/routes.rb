@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   root to: 'table#index', as: 'table'
 
   resources :calendar_events do
-    post 'ajax_update', on: :member
+    put 'ajax_update', on: :member
   end
 
   # The priority is based upon order of creation: first created -> highest priority.

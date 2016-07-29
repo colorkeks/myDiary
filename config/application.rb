@@ -22,6 +22,9 @@ module MyDiary
 
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
+    config.time_zone = 'Europe/Samara'
+    config.active_record.default_timezone = :local
+    config.active_record.time_zone_aware_attributes = false
     config.autoload_paths << Rails.root.join('lib')
   end
 end
