@@ -58,10 +58,10 @@ $(document).on('turbolinks:load', function () {
 
 //    На основе высоты и отступа считаем время
         var top = ui.position.top;
-        var startHour=  Math.floor(top / 220);
-        var startMinute = Math.floor(((top - startHour * 220) * 60) / 220);
-        var endHour = Math.floor((height + top)/220);
-        var endMinute = Math.floor(((height + top - endHour * 220) * 60) / 220 + 1) ;
+        var startHour=  Math.floor(top / 100);
+        var startMinute = Math.floor(((top - startHour * 100) * 60) / 100);
+        var endHour = Math.floor((height + top)/100);
+        var endMinute = Math.floor(((height + top - endHour * 100) * 60) / 100 + 1) ;
 
         if (endMinute >= 60){
             endHour += 1;

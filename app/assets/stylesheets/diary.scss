@@ -30,6 +30,7 @@
 
 table {
   width: 100%;
+  height: 100%;
   box-sizing: border-box;
   table-layout: fixed;
   border-collapse: collapse;
@@ -55,6 +56,7 @@ td {
 }
 
 .table {
+  min-width: 822px;
   &.event_week_table, &.event_day_table {
     background: transparent;
     margin-bottom: 0;
@@ -206,18 +208,36 @@ td {
 }
 
 .scrollable{
-  height: 600px;
-  width: 862px;
+  position: relative;
+  height: 450px;
+  margin-bottom: 20px;
+  width: calc(100% + 15px);
   overflow-y: auto;
 }
 
 .diary{
-  width: 847px;
+  width: 100%;
+  max-width: 822px;
 }
 
-.month_table_row, .week_table_row, .day_table_row {
+.day_column{
+  position: relative;
+}
+
+.day-time{
+  z-index: 100;
+  position: absolute;
+}
+
+.month_table_row{
   td {
     height: 110px;
+  }
+}
+
+.week_table_row, .day_table_row {
+  td {
+    height: 50px;
   }
 }
 

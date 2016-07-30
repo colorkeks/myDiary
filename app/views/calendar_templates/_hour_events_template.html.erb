@@ -1,25 +1,24 @@
 <% all_events = sorted_events.select { |key| key === day } %>
-<% if all_events.empty? %>
-    <td></td>
-<% else %>
-    <td style="position: relative;">
+    <td class="day_column" data-date="<%= day %>">
+      <% if !all_events.empty? %>
       <!--TODO СДЕЛАТЬ РАСЧЕТЫ ЧТОБЫ ЭВЕНТЫ АДАПТИВНО РАСПОЛАГАЛИСЬ(КАК В FULLCALENDAR НАПРИМЕР)-->
       <% all_events.each do |pair| %>
           <% day_events = pair.fetch(1).select { |event| !event.all_day } %>
           <% day_events.each_with_index do |event, index| %>
-
-              <% position = index.odd? ? 'right: ' + index.to_s + 'px' : 'left: ' + index.to_s + 'px' %>
+              <% pos = ((1 + index*2)).to_s  %>
+              <% position = index.odd? ? 'right: ' + pos + '%' : 'left: ' + pos + '%' %>
               <% width = (100/day_events.count).to_s + '%' %>
-              <% top_position = (event.start_date.hour + (event.start_date.strftime('%M').to_i)/60.0)*220 %>
+              <% top_position = (event.start_date.hour + (event.start_date.strftime('%M').to_i)/60.0)*100 %>
 
               <% if event.end_date.day - event.start_date.day == 0 %>
                   <% event_height = ((event.end_date.hour - event.start_date.hour) +
-                      (event.end_date.strftime('%M').to_i - event.start_date.strftime('%M').to_i)/60.0)*220 %>
+                      (event.end_date.strftime('%M').to_i - event.start_date.strftime('%M').to_i)/60.0)*100 %>
               <% else %>
-                  <% event_height = (24 -(event.start_date.hour + (event.start_date.strftime('%M').to_i)/60.0))*220 %>
+                  <% event_height = (24 -(event.start_date.hour + (event.start_date.strftime('%M').to_i)/60.0))*100 %>
               <% end %>
 
-              <div class="event hour-event" data-start-date="<%= event.start_date %>" data-end-date="<%= event.end_date %>" id="<%= event.id %>" style="position: absolute; height: <%= event_height %>px; top:<%= top_position %>px; <%= position %>; width: <%= width %> ">
+              <div class="event hour-event" data-start-date="<%= event.start_date %>" data-end-date="<%= event.end_date %>" id="<%= event.id %>"
+                   style="position: absolute; height: <%= event_height %>px; top:<%= top_position %>px; <%= position %>; width: <%= width %>; overflow: hidden ">
                 <%= event.title %>
                 <div>
                     <span class="start_date">
