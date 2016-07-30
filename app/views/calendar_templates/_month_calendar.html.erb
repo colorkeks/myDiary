@@ -38,23 +38,20 @@
         <div style="position: relative">
           <% date_range.each_slice(7) do |week| %>
               <div style="position: relative">
-                <div>
-                  <table class="month_table_row">
-                    <tr>
-                      <% week.each do |day| %>
-                          <%= content_tag :td, class: calendar.td_classes_for(day), data: {date: day} do %>
-                          <% end %>
-                      <% end %>
-                    </tr>
-                  </table>
-                </div>
+                <table class="month_table_row">
+                  <tr>
+                    <% week.each do |day| %>
+                        <td></td>
+                    <% end %>
+                  </tr>
+                </table>
                 <!--TODO СДЕЛАТЬ ТАК ЧТОБЫ СКРОЛИЛОСЬ ТОЛЬКО ТЕЛО-->
                 <div class="event-content-container scrollable">
                   <table class="month_table_row">
                     <thead>
                     <tr>
                       <% week.each do |day| %>
-                          <%= content_tag :th, class: calendar.td_classes_for(day), data: {date: day} do %>
+                          <%= content_tag :th, class: calendar.td_classes_for(day), data: {date: day.to_datetime} do %>
                               <% block.call day.strftime('%d') %>
                           <% end %>
                       <% end %>
@@ -64,10 +61,20 @@
                     <!-- TODO DRAG AND DROP (нужно больше боли !) -->
                     <!-- TODO ADD RESIZABLE-->
                     <!-- TODO ЕСЛИ НЕ ALLDAY ТО РЕСАЙЗИТЬ НЕЛЬЗЯ-->
-                    <% (sorted_events.select { |key| !(key.to_a & week.to_a).empty? }).each do |pair| %>
-                        <% key = pair.fetch(0) %>
-                        <% events = pair.fetch(1).select %>
-                        <%= render partial: 'calendar_templates/day_events_template', locals: {key: key, events: events, date_range: week} %>
+                    <% if (sorted_events.select { |key| !(key.to_a & week.to_a).empty? }).empty? %>
+                        <tr>
+                          <% week.each do |day| %>
+                              <%= content_tag :td, class: calendar.td_classes_for(day), data: {date: day.to_datetime} do %>
+                              <% end %>
+                          <% end %>
+                        </tr>
+                    <% else %>
+                        <% (sorted_events.select { |key| !(key.to_a & week.to_a).empty? }).each do |pair| %>
+                            <% key = pair.fetch(0) %>
+                            <% events = pair.fetch(1) %>
+
+                            <%= render partial: 'calendar_templates/day_events_template', locals: {key: key, events: events, date_range: week} %>
+                        <% end %>
                     <% end %>
                     </tbody>
                   </table>

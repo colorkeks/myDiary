@@ -20,7 +20,7 @@
     <tr class="table-header">
       <td class="hours">Hours</td>
       <% date_range.slice(0, 7).each do |day| %>
-          <%= content_tag :td, class: calendar.td_classes_for(day) do %>
+          <%= content_tag :td, class: calendar.td_classes_for(day), data: {date: day} do %>
               <%= day.strftime('%A %d') %>
           <% end %>
       <% end %>
@@ -74,15 +74,20 @@
 
           <div class="scrollable">
             <div style="position: relative">
-              <table class="week_table_row">
-                <% (0 .. 84600).step(1800) do |hour| %>
-                    <% time = Time.at(hour).utc %>
-                    <tr data-time="<%= time.strftime('%H:%M') %>">
-                      <td class="hours" style="z-index: 100"><%= time.strftime('%H:%M') %></td>
-                      <td colspan="7"></td>
-                    </tr>
-                <% end %>
-              </table>
+              <div style="position: absolute">
+                <table class="week_table_row">
+                  <% (0 .. 84600).step(1800) do |hour| %>
+                      <% time = Time.at(hour).utc %>
+                      <tr>
+                        <td class="hours"><%= time.strftime('%H:%M') %></td>
+                        <% date_range.slice(0, 7).each do |day| %>
+                            <%= content_tag :td, class: calendar.td_classes_for(day), data:{date: DateTime.new(day.year, day.month, day.day, time.hour, time.min)} do %>
+                            <% end %>
+                        <% end %>
+                      </tr>
+                  <% end %>
+                </table>
+              </div>
 
 
               <div class="week-event-content">
@@ -91,7 +96,7 @@
                   <tr>
                     <td class="hours"></td>
                     <% date_range.slice(0, 7).each do |day| %>
-                      <%= render partial: 'calendar_templates/hour_events_template', locals: {sorted_events: sorted_events, day: day} %>
+                        <%= render partial: 'calendar_templates/hour_events_template', locals: {sorted_events: sorted_events, day: day} %>
                     <% end %>
                   </tr>
                   </tbody>

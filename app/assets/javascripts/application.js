@@ -19,6 +19,13 @@
 
 
 $(document).on('turbolinks:load', function () {
+    $('.day').click(function() {
+        alert($(this).data("date"));
+    });
+
+    $('.day_all').click(function() {
+        alert($(this).data("date"));
+    });
 
     $('.hour-event').draggable({
         axis: "y",

@@ -73,15 +73,18 @@
 
           <div class="scrollable">
             <div style="position: relative">
+              <div style="position: absolute">
                 <table class="day_table_row">
                   <% (0 .. 84600).step(1800) do |hour| %>
                       <% time = Time.at(hour).utc %>
-                      <tr data-time="<%= time.strftime('%H:%M') %>">
+                      <tr>
                         <td class="hours"><%= time.strftime('%H:%M') %></td>
-                        <td colspan="7"></td>
+                        <%= content_tag :td, class: calendar.td_classes_for(start_date), data:{date: DateTime.new(start_date.year, start_date.month, start_date.day, time.hour, time.min)} do %>
+                        <% end %>
                       </tr>
                   <% end %>
                 </table>
+              </div>
 
                 <div class="day-event-content">
                   <table class="table event_day_table">

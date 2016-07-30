@@ -4,6 +4,8 @@
         <% start_included = date_range.include?(start_date) %>
         <% end_included = date_range.include?(end_date) %>
         <% resizable_class = event.all_day ? 'resizable' : '' %>
+        <% event_data = 'data-id=' + event.id.to_s + ' data-allday=' + event.all_day.to_s + ' data-start-date=' +
+                    event.start_date.to_datetime.to_s + ' data-end-date=' + event.end_date.to_datetime.to_s %>
         <tr>
           <% if date_range.to_a.include?(start_date) %>
               <% (start_date.cwday - 1).times do %>
@@ -14,24 +16,32 @@
           <!--Если начало и конец на одной неделе-->
           <% if start_included && end_included %>
               <td colspan="<%= end_date.cwday - start_date.cwday + 1 %>">
-                <div class="event week_event <%= resizable_class %>"><%= event.title %></div>
+                <div <%= event_data %> class="event week_event <%= resizable_class %>">
+                  <%= event.title %>
+                </div>
               </td>
                 <!--Для длительных событый которые занимают всю неделю+ -->
           <% elsif key.include?(date_range.first) && key.include?(date_range.last) %>
               <td colspan="7">
-                <div class="event week_event"><%= event.title %></div>
+                <div <%= event_data %> class="event week_event">
+                  <%= event.title %>
+                </div>
               </td>
                 <!--Если только начало на этой неделе-->
           <% elsif start_included %>
               <% max = 8 - start_date.cwday %>
               <% current = (end_date - start_date).to_i %>
               <td colspan="<%= current > max ? max : current %>">
-                <div class="event week_event"><%= event.title %></div>
+                <div <%= event_data %> class="event week_event">
+                  <%= event.title %>
+                </div>
               </td>
                 <!--Если только конец на этой неделе-->
           <% elsif end_included %>
               <td colspan="<%= end_date.cwday %>">
-                <div class="event week_event <%= resizable_class %>"><%= event.title %></div>
+                <div <%= event_data %> class="event week_event <%= resizable_class %>">
+                  <%= event.title %>
+                </div>
               </td>
           <% end %>
         </tr>
