@@ -19,21 +19,26 @@
 
 
 $(document).on('turbolinks:load', function () {
-    $('.day').click(function() {
+    $('.date').click(function() {
         alert($(this).data("date"));
     });
 
-    $('.day_all').click(function() {
-        alert($(this).data("date"));
+    $('.event').click(function() {
+        // TODO OPEN MODAL
+        if($(this).data('dragging/resizable')) return;
+        alert($(this).data("end-date"));
     });
-
     $('.hour-event').draggable({
         axis: "y",
         containment: "parent",
+        start: function(event, ui){
+            $(this).data('dragging/resizable', true);
+        },
         stop: function (event, ui) {
             var height = ui.helper.height();
             var dates = calc_datetime(event, ui, height);
-            ajax_event_update(event.target.id, dates[0], dates[1])
+            ajax_event_update($(event.target).data('id'), dates[0], dates[1]);
+            setTimeout(function(){ $(event.target).data('dragging/resizable', false); }, 1);
         },
         drag: function (event, ui) {
             var height = ui.helper.height();
@@ -46,10 +51,14 @@ $(document).on('turbolinks:load', function () {
         handles: 's',
         minHeight: 110,
         containment: "parent",
+        start: function(event, ui){
+            $(this).data('dragging/resizable', true);
+        },
         stop: function (event, ui) {
             var height = ui.size.height;        //нет бы сделать как в resizable
             var dates = calc_datetime(event, ui, height);
-            ajax_event_update(event.target.id, dates[0], dates[1])
+            ajax_event_update($(event.target).data('id'), dates[0], dates[1]);
+            setTimeout(function(){ $(event.target).data('dragging/resizable', false); }, 1);
         },
         resize: function (event, ui) {
             var height = ui.size.height;        //нет бы сделать как в resizable

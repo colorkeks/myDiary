@@ -44,5 +44,11 @@
                 </div>
               </td>
           <% end %>
+
+          <% if end_included%>
+              <% (7 - end_date.cwday).times do %>
+                  <td></td>
+              <% end %>
+          <% end %>
         </tr>
  <% end %>

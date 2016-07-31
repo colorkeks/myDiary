@@ -7,6 +7,7 @@
     </div>
     <span class="date-title"><%= start_date.strftime('%B %Y') %></span>
     <div class="right-panel">
+      <div class="btn btn-success btn-sm"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></div>
       <div class="btn-group">
         <%= link_to t('diary.today', default: 'День'), calendar.to_calendar('day_calendar'), class: 'btn btn-default' %>
         <%= link_to t('diary.today', default: 'Неделя'), calendar.to_calendar('week_calendar'), class: 'btn btn-default' %>
@@ -74,20 +75,17 @@
 
           <div class="scrollable">
             <div style="position: relative">
-              <div style="position: absolute">
                 <table class="week_table_row">
                   <% (0 .. 84600).step(1800) do |hour| %>
                       <% time = Time.at(hour).utc %>
                       <tr>
                         <td class="hours"><%= time.strftime('%H:%M') %></td>
                         <% date_range.slice(0, 7).each do |day| %>
-                            <%= content_tag :td, class: calendar.td_classes_for(day), data:{date: DateTime.new(day.year, day.month, day.day, time.hour, time.min)} do %>
-                            <% end %>
+                          <td></td>
                         <% end %>
                       </tr>
                   <% end %>
                 </table>
-              </div>
 
 
               <div class="week-event-content">

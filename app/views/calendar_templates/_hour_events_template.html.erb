@@ -1,13 +1,13 @@
 <% all_events = sorted_events.select { |key| key === day } %>
-<td style="position: relative" class="day" data-date="<%= day %>">
+<td style="position: relative">
   <% if !all_events.empty? %>
       <!--TODO СДЕЛАТЬ РАСЧЕТЫ ЧТОБЫ ЭВЕНТЫ АДАПТИВНО РАСПОЛАГАЛИСЬ(КАК В FULLCALENDAR НАПРИМЕР)-->
       <% all_events.each do |pair| %>
           <% day_events = pair.fetch(1).select { |event| !event.all_day } %>
           <% day_events.each_with_index do |event, index| %>
-              <% data = 'data-id=' + event.id.to_s + ' data-allday=' + event.all_day.to_s + ' data-start-date=' +
+              <% event_data = 'data-id=' + event.id.to_s + ' data-allday=' + event.all_day.to_s + ' data-start-date=' +
                   event.start_date.to_datetime.to_s + ' data-end-date=' + event.end_date.to_datetime.to_s %>
-              <% pos = ((1 + index*2)).to_s %>
+              <% pos = ((index*2)).to_s %>
               <% position = index.odd? ? 'right: ' + pos + '%' : 'left: ' + pos + '%' %>
               <% width = (100/day_events.count).to_s + '%' %>
               <% top_position = (event.start_date.hour + (event.start_date.strftime('%M').to_i)/60.0)*100 %>
@@ -19,7 +19,7 @@
                   <% event_height = (24 -(event.start_date.hour + (event.start_date.strftime('%M').to_i)/60.0))*100 %>
               <% end %>
 
-              <div <%= data %> class="event hour-event" style="position: absolute;
+              <div <%= event_data %> class="event hour-event" style="position: absolute;
                     height: <%= event_height %>px; top:<%= top_position %>px;
                     <%= position %>;width: <%= width %>; overflow: hidden ">
                 <%= event.title %>
