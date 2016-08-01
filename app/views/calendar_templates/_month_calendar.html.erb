@@ -36,23 +36,24 @@
     <tbody>
     <tr>
       <td style="border: none">
-        <div style="position: relative">
+        <div class="drag-container" style="position: relative">
           <% date_range.each_slice(7) do |week| %>
               <div style="position: relative">
                 <table class="month_table_row">
                   <tr>
                     <% week.each do |day| %>
-                        <td></td>
+                        <%= content_tag :td, class: calendar.td_classes_for(day) do %>
+                        <% end %>
                     <% end %>
                   </tr>
                 </table>
                 <!--TODO СДЕЛАТЬ ТАК ЧТОБЫ СКРОЛИЛОСЬ ТОЛЬКО ТЕЛО-->
                 <div class="event-content-container scrollable">
-                  <table class="month_table_row">
+                  <table class="month_table_row droppable_table">
                     <thead>
                     <tr>
                       <% week.each do |day| %>
-                          <%= content_tag :th, class: calendar.td_classes_for(day) << 'date', data: {date: day.to_datetime} do %>
+                          <%= content_tag :th, class: calendar.td_classes_for(day) << 'date', data: {date: day.to_date} do %>
                               <% block.call day.strftime('%d') %>
                           <% end %>
                       <% end %>

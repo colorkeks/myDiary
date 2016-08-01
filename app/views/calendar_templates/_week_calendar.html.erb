@@ -16,12 +16,12 @@
     </div>
   </div>
 
-  <table class="table week_table">
+  <table class="table week_table droppable_table">
     <thead>
     <tr class="table-header">
       <td class="hours">Hours</td>
       <% date_range.slice(0, 7).each do |day| %>
-          <%= content_tag :td, class: calendar.td_classes_for(day), data: {date: day} do %>
+          <%= content_tag :td, class: calendar.td_classes_for(day) << 'date', data: {date: day} do %>
               <%= day.strftime('%A %d') %>
           <% end %>
       <% end %>
@@ -73,7 +73,7 @@
             </table>
           </div>
 
-          <div class="scrollable">
+          <div class="day-scrollable">
             <div style="position: relative">
                 <table class="week_table_row">
                   <% (0 .. 84600).step(1800) do |hour| %>

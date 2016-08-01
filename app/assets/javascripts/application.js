@@ -19,15 +19,79 @@
 
 
 $(document).on('turbolinks:load', function () {
-    $('.date').click(function() {
-        alert($(this).data("date"));
-    });
 
-    $('.event').click(function() {
+    // DRAGGABLE В разрезе месяца и allday
+    $('.week_event').draggable({
+        revert: 'invalid',
+        scroll: false,
+        containment: $(this).parents().find('.drag-container'),
+        helper: 'clone',
+        start: function(){ //hide original when showing clone
+            var this_id = $(this).data('id');
+            $('*[data-id=' + this_id +  ']').hide();
+            $('.event').hide();
+            $(".ui-draggable-dragging").show();
+            $(this).parents().find('.event-content-container').css('overflow-y', 'visible').css('width', '100%');
+        },
+        stop: function(){ //show original when hiding clone
+            $(this).show();
+            $('.event').show();
+            $(this).parents().find('.event-content-container').css('overflow-y', 'scroll').css('width', 'calc(100% + 15px)');
+        }
+    }).click(function() {
         // TODO OPEN MODAL
         if($(this).data('dragging/resizable')) return;
         alert($(this).data("end-date"));
     });
+
+    // DROPPABLE В разрезе месяца и allday
+    $('.date').droppable({
+        drop: function(){
+            var endDate = getNewEndDate($( this ).data('date'), $(".ui-draggable-dragging").data('start-date'), $(".ui-draggable-dragging").data('end-date'));
+            ajax_event_update($(".ui-draggable-dragging").data('id'), $( this ).data('date'),  endDate, $(".ui-draggable-dragging").data('all-day'));
+        //  TODO ПОДУМАТЬ КАК СДЕЛАТЬ БЫТРЕЙ
+            Turbolinks.visit(location.toString());
+
+
+        },
+        over: function(){
+            $(this).css('background', 'red')
+        },
+        out: function(){
+            $(this).css('background', 'rgba(133, 255, 179, 0.66)')
+        }
+    }).click(function() {
+        alert($(this).data("date"));
+    });
+
+    function getUrlParameter(sParam) {
+      var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+          sURLVariables = sPageURL.split('&'),
+          sParameterName,
+          i;
+
+      for (i = 0; i < sURLVariables.length; i++) {
+        sParameterName = sURLVariables[i].split('=');
+
+        if (sParameterName[0] === sParam) {
+          return sParameterName[1] === undefined ? true : sParameterName[1];
+        }
+      }
+    };
+
+
+    function getNewEndDate(newStartDate, oldStartDate, oldEndDate){
+        newStartDate = new Date(newStartDate);
+        oldStartDate =  new Date(oldStartDate);
+        oldEndDate = new Date(oldEndDate);
+
+
+        var delta = new Date(newStartDate - oldStartDate);
+        var date = new Date(oldEndDate);
+        date.setDate(oldEndDate.getDate() + Math.round(delta / 1000 / 60 / 60/ 24) );
+        return date;
+    }
+
     $('.hour-event').draggable({
         axis: "y",
         containment: "parent",
@@ -37,7 +101,7 @@ $(document).on('turbolinks:load', function () {
         stop: function (event, ui) {
             var height = ui.helper.height();
             var dates = calc_datetime(event, ui, height);
-            ajax_event_update($(event.target).data('id'), dates[0], dates[1]);
+            ajax_event_update($(event.target).data('id'), dates[0], dates[1], $(event.target).data('all-day'));
             setTimeout(function(){ $(event.target).data('dragging/resizable', false); }, 1);
         },
         drag: function (event, ui) {
@@ -45,9 +109,7 @@ $(document).on('turbolinks:load', function () {
             var dates = calc_datetime(event, ui, height);
             change_event_time(event, dates[0], dates[1]);
         }
-    });
-
-    $('.hour-event').resizable({
+    }).resizable({
         handles: 's',
         minHeight: 110,
         containment: "parent",
@@ -57,7 +119,7 @@ $(document).on('turbolinks:load', function () {
         stop: function (event, ui) {
             var height = ui.size.height;        //нет бы сделать как в resizable
             var dates = calc_datetime(event, ui, height);
-            ajax_event_update($(event.target).data('id'), dates[0], dates[1]);
+            ajax_event_update($(event.target).data('id'), dates[0], dates[1], $(event.target).data('all-day'));
             setTimeout(function(){ $(event.target).data('dragging/resizable', false); }, 1);
         },
         resize: function (event, ui) {
@@ -92,12 +154,13 @@ $(document).on('turbolinks:load', function () {
         return [start_date, end_date];
     }
 
-    function ajax_event_update(event_id, start_date, end_date) {
+    function ajax_event_update(event_id, start_date, end_date, all_day) {
+        all_day = all_day || false;
         $.ajax({
             type: "POST",
             url: "/calendar_events/" + event_id + "/ajax_update"  ,
             dataType: 'JSON',
-            data: {calendar_event:{start_date: start_date, end_date: end_date, all_day: false}, _method: 'put'}
+            data: {calendar_event:{start_date: start_date, end_date: end_date, all_day: all_day}, _method: 'put'}
         }).done(function( result ) {
             (console.log(result))
         });

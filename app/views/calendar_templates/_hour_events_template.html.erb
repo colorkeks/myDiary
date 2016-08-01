@@ -5,7 +5,7 @@
       <% all_events.each do |pair| %>
           <% day_events = pair.fetch(1).select { |event| !event.all_day } %>
           <% day_events.each_with_index do |event, index| %>
-              <% event_data = 'data-id=' + event.id.to_s + ' data-allday=' + event.all_day.to_s + ' data-start-date=' +
+              <% event_data = 'data-id=' + event.id.to_s + ' data-all-day=' + event.all_day.to_s  + ' data-start-date=' +
                   event.start_date.to_datetime.to_s + ' data-end-date=' + event.end_date.to_datetime.to_s %>
               <% pos = ((index*2)).to_s %>
               <% position = index.odd? ? 'right: ' + pos + '%' : 'left: ' + pos + '%' %>
