@@ -29,24 +29,25 @@ $(document).on('turbolinks:load', function () {
         start: function(){ //hide original when showing clone
             var this_id = $(this).data('id');
             $('*[data-id=' + this_id +  ']').hide();
-            $('.event').hide();
+            // $('.event').hide();
             $(".ui-draggable-dragging").show();
             $(this).parents().find('.event-content-container').css('overflow-y', 'visible').css('width', '100%');
         },
         stop: function(){ //show original when hiding clone
             $(this).show();
-            $('.event').show();
+            // $('.event').show();
             $(this).parents().find('.event-content-container').css('overflow-y', 'scroll').css('width', 'calc(100% + 15px)');
         }
     }).click(function() {
         // TODO OPEN MODAL
         if($(this).data('dragging/resizable')) return;
-        alert($(this).data("end-date"));
+        alert("TODO THIS EVENT MODAL");
     });
 
     // DROPPABLE В разрезе месяца и allday
     $('.date').droppable({
         drop: function(){
+            $(this).css('background', 'rgba(133, 255, 179, 0.66)')
             var endDate = getNewEndDate($( this ).data('date'), $(".ui-draggable-dragging").data('start-date'), $(".ui-draggable-dragging").data('end-date'));
             ajax_event_update($(".ui-draggable-dragging").data('id'), $( this ).data('date'),  endDate, $(".ui-draggable-dragging").data('all-day'));
         //  TODO ПОДУМАТЬ КАК СДЕЛАТЬ БЫТРЕЙ
@@ -61,23 +62,32 @@ $(document).on('turbolinks:load', function () {
             $(this).css('background', 'rgba(133, 255, 179, 0.66)')
         }
     }).click(function() {
-        alert($(this).data("date"));
+        alert("TODO NEW EVENT MODAL");
     });
 
-    function getUrlParameter(sParam) {
-      var sPageURL = decodeURIComponent(window.location.search.substring(1)),
-          sURLVariables = sPageURL.split('&'),
-          sParameterName,
-          i;
 
-      for (i = 0; i < sURLVariables.length; i++) {
-        sParameterName = sURLVariables[i].split('=');
+    $('.hour-date').droppable({
+        accept: '.week_event',
+        drop: function(){
+            $(this).css('background', 'transparent');
+            var newStartDate= new Date($( this ).data('date'));
+            newStartDate.setHours(0);
+            newStartDate.setMinutes(0);
+            var newEndDate = new Date(newStartDate);
+            newEndDate.setHours(1);
 
-        if (sParameterName[0] === sParam) {
-          return sParameterName[1] === undefined ? true : sParameterName[1];
+
+            ajax_event_update($(".ui-draggable-dragging").data('id'), newStartDate,  newEndDate, false);
+
+            Turbolinks.visit(location.toString());
+        },
+        over: function(){
+            $(this).css('background', 'rgba(133, 255, 179, 0.66)')
+        },
+        out: function(){
+            $(this).css('background', 'transparent')
         }
-      }
-    };
+    });
 
 
     function getNewEndDate(newStartDate, oldStartDate, oldEndDate){
@@ -93,14 +103,17 @@ $(document).on('turbolinks:load', function () {
     }
 
     $('.hour-event').draggable({
-        axis: "y",
-        containment: "parent",
+        axis: "x, y",
+        grid: [110, 1],
+        containment: $('.event_hour_table'),
+
         start: function(event, ui){
             $(this).data('dragging/resizable', true);
         },
         stop: function (event, ui) {
             var height = ui.helper.height();
             var dates = calc_datetime(event, ui, height);
+            dates = calc_date(dates, ui);
             ajax_event_update($(event.target).data('id'), dates[0], dates[1], $(event.target).data('all-day'));
             setTimeout(function(){ $(event.target).data('dragging/resizable', false); }, 1);
         },
@@ -127,7 +140,22 @@ $(document).on('turbolinks:load', function () {
             var dates = calc_datetime(event, ui, height);
             change_event_time(event, dates[0], dates[1]);
         }
+    }).click(function() {
+        // TODO OPEN MODAL
+        if($(this).data('dragging/resizable')) return;
+        alert("TODO THIS EVENT MODAL");
     });
+
+    function calc_date(dates, ui) {
+        var start_date = dates[0];
+        var end_date = dates[1];
+        var left = ui.position.left;
+
+        start_date.setDate(start_date.getDate() + Math.floor(left/110));
+        end_date.setDate(end_date.getDate() + Math.floor(left/110));
+
+        return [start_date, end_date];
+    }
 
 
     function calc_datetime(event, ui, height) {
