@@ -51,7 +51,9 @@ $(document).on('turbolinks:load', function () {
             var endDate = getNewEndDate($( this ).data('date'), $(".ui-draggable-dragging").data('start-date'), $(".ui-draggable-dragging").data('end-date'));
             ajax_event_update($(".ui-draggable-dragging").data('id'), $( this ).data('date'),  endDate, $(".ui-draggable-dragging").data('all-day'));
         //  TODO ПОДУМАТЬ КАК СДЕЛАТЬ БЫТРЕЙ
-            Turbolinks.visit(location.toString());
+            Turbolinks.clearCache();
+            Turbolinks.visit(location);
+
 
 
         },
@@ -78,8 +80,8 @@ $(document).on('turbolinks:load', function () {
 
 
             ajax_event_update($(".ui-draggable-dragging").data('id'), newStartDate,  newEndDate, false);
-
-            Turbolinks.visit(location.toString());
+            Turbolinks.clearCache();
+            Turbolinks.visit(location);
         },
         over: function(){
             $(this).css('background', 'rgba(133, 255, 179, 0.66)')
