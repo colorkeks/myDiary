@@ -29,13 +29,13 @@ $(document).on('turbolinks:load', function () {
         start: function(){ //hide original when showing clone
             var this_id = $(this).data('id');
             $('*[data-id=' + this_id +  ']').hide();
-            // $('.event').hide();
+            $('.event').hide();
             $(".ui-draggable-dragging").show();
             $(this).parents().find('.event-content-container').css('overflow-y', 'visible').css('width', '100%');
         },
         stop: function(){ //show original when hiding clone
             $(this).show();
-            // $('.event').show();
+            $('.event').show();
             $(this).parents().find('.event-content-container').css('overflow-y', 'scroll').css('width', 'calc(100% + 15px)');
         }
     }).click(function() {
@@ -126,7 +126,7 @@ $(document).on('turbolinks:load', function () {
         }
     }).resizable({
         handles: 's',
-        minHeight: 100,
+        minHeight: 50,
         containment: "parent",
         start: function(event, ui){
             $(this).data('dragging/resizable', true);
