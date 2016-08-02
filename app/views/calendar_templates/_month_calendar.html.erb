@@ -55,7 +55,7 @@
                     <thead>
                     <tr>
                       <% week.each do |day| %>
-                          <%= content_tag :th, class: calendar.td_classes_for(day) << 'date', data: {date: day.to_date, modal: true} do %>
+                          <%= content_tag :th, class: calendar.td_classes_for(day) << 'date', data: {date: day.to_date, all_day: true, modal: true} do %>
                               <% block.call day.strftime('%d') %>
                           <% end %>
                       <% end %>

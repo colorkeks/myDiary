@@ -15,7 +15,7 @@ class CalendarEventsController < ApplicationController
 
   # GET /calendar_events/new
   def new
-    @calendar_event = CalendarEvent.new
+    @calendar_event = CalendarEvent.new(params[:calendar_event].nil? ? nil : calendar_event_params )
     respond_modal_with @calendar_event
   end
 

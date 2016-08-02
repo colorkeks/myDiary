@@ -19,7 +19,6 @@
 
 
 $(document).on('turbolinks:load', function () {
-
     modal_listener();
     events_listners();
 });
