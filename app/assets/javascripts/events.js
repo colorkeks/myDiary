@@ -204,24 +204,12 @@ function events_listners() {
         var end_date = new Date($(event.target).data('end-date'));
 
 //    На основе высоты и отступа считаем время
-        var top = ui.position.top + 1;
+        var top = ui.position.top;
         var startHour = Math.floor(top / 100);
-        var startMinute = Math.floor(((top - startHour * 100) * 60) / 100);
-
-        if (startMinute >= 60) {
-            startHour += 1;
-            startMinute = 0;
-        }
-
-
+        var startMinute = Math.floor(((top - startHour * 100) * 60) / 100  + 1);
+        
         var endHour = Math.floor((height + top) / 100);
-        var endMinute = Math.floor(((height + top - endHour * 100) * 60) / 100);
-
-        if (endMinute >= 60) {
-            if (endHour != 23 && endMinute != 59)
-                endHour += 1;
-            endMinute = 0;
-        }
+        var endMinute = Math.floor(((height + top - endHour * 100) * 60) / 100 );
 
         start_date.setHours(startHour);
         start_date.setMinutes(startMinute);
