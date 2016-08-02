@@ -7,7 +7,9 @@
     </div>
     <span class="date-title"><%= start_date.strftime('%B %d, %Y') %></span>
     <div class="right-panel">
-      <div class="btn btn-success btn-sm"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></div>
+      <%= link_to new_calendar_event_path, data: {modal: true}, class: 'btn btn-sm btn-success' do %>
+          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+      <% end %>
       <div class="btn-group">
         <%= link_to t('diary.today', default: 'День'), calendar.to_calendar('day_calendar'), class: 'btn btn-default' %>
         <%= link_to t('diary.today', default: 'Неделя'), calendar.to_calendar('week_calendar'), class: 'btn btn-default' %>
@@ -54,7 +56,7 @@
                       <tbody class="all_day_content">
                       <!-- TODO ADD RESIZABLE-->
                       <!-- TODO DRAG AND DROP (нужно больше боли !) -->
-                      <% (sorted_events.select { |key| key === start_date}).each do |pair| %>
+                      <% (sorted_events.select { |key| key === start_date }).each do |pair| %>
                           <% pair.fetch(1).each do |event| %>
                               <% next if !event.all_day %>
                               <tr>
@@ -74,26 +76,26 @@
 
           <div class="day-scrollable">
             <div style="position: relative">
-                <table class="day_table_row">
-                  <% (0 .. 84600).step(1800) do |hour| %>
-                      <% time = Time.at(hour).utc %>
-                      <tr>
-                        <td class="hours"><%= time.strftime('%H:%M') %></td>
-                        <td></td>
-                      </tr>
-                  <% end %>
-                </table>
-
-                <div class="day-event-content">
-                  <table class="table event_hour_table">
-                    <tbody>
+              <table class="day_table_row">
+                <% (0 .. 84600).step(1800) do |hour| %>
+                    <% time = Time.at(hour).utc %>
                     <tr>
-                      <td class="hours"></td>
-                      <%= render partial: 'calendar_templates/hour_events_template', locals: {sorted_events: sorted_events, day: start_date} %>
+                      <td class="hours"><%= time.strftime('%H:%M') %></td>
+                      <td></td>
                     </tr>
-                    </tbody>
-                  </table>
-                </div>
+                <% end %>
+              </table>
+
+              <div class="day-event-content">
+                <table class="table event_hour_table">
+                  <tbody>
+                  <tr>
+                    <td class="hours"></td>
+                    <%= render partial: 'calendar_templates/hour_events_template', locals: {sorted_events: sorted_events, day: start_date} %>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
 

@@ -7,7 +7,9 @@
     </div>
     <span class="date-title"><%= start_date.strftime('%B %Y') %></span>
     <div class="right-panel">
-      <div class="btn btn-success btn-sm"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></div>
+      <%= link_to new_calendar_event_path, data: { modal: true }, class: 'btn btn-sm btn-success' do %>
+          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+      <% end %>
       <div class="btn-group">
         <%= link_to t('diary.today', default: 'День'), calendar.to_calendar('day_calendar'), class: 'btn btn-default' %>
         <%= link_to t('diary.today', default: 'Неделя'), calendar.to_calendar('week_calendar'), class: 'btn btn-default' %>
@@ -53,7 +55,7 @@
                     <thead>
                     <tr>
                       <% week.each do |day| %>
-                          <%= content_tag :th, class: calendar.td_classes_for(day) << 'date', data: {date: day.to_date} do %>
+                          <%= content_tag :th, class: calendar.td_classes_for(day) << 'date', data: {date: day.to_date, modal: true} do %>
                               <% block.call day.strftime('%d') %>
                           <% end %>
                       <% end %>

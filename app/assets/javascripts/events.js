@@ -1,5 +1,8 @@
 
 function events_listners() {
+    var modal_holder_selector, modal_selector;
+    modal_holder_selector = '#modal-holder';
+    modal_selector = '.modal';
 
 // DRAGGABLE, CLICK(THIS_EVENT) В разрезе месяца и allday
     $('.week_event').draggable({
@@ -20,9 +23,8 @@ function events_listners() {
             $(this).parents().find('.event-content-container').css('overflow-y', 'scroll').css('width', 'calc(100% + 15px)');
         }
     }).click(function () {
-        // TODO OPEN MODAL
         if ($(this).data('dragging/resizable')) return;
-        alert("TODO THIS EVENT MODAL");
+        show_event($(this).data('id'));
     });
 
 
@@ -41,7 +43,7 @@ function events_listners() {
             $(this).css('background', 'rgba(133, 255, 179, 0.66)')
         }
     }).click(function () {
-        alert("TODO NEW EVENT MODAL");
+        new_event($(this).data('date'), true)
     });
 
 // DROPPABLE В разрезе ДНЯ И НЕДЕЛИ (ЧАСЫ/NOT_ALL_DAY)
@@ -109,9 +111,8 @@ function events_listners() {
             change_event_time(event, dates[0], dates[1]);
         }
     }).click(function () {
-        // TODO OPEN MODAL
         if ($(this).data('dragging/resizable')) return;
-        alert("TODO THIS EVENT MODAL");
+        show_event($(this).data('id'));
     });
 
 
@@ -140,6 +141,35 @@ function events_listners() {
             //  TODO ПОДУМАТЬ КАК СДЕЛАТЬ БЫТРЕЙ
             Turbolinks.clearCache();
             Turbolinks.visit(location);
+        });
+    }
+
+
+    function show_event(event_id) {
+        
+        $.ajax({
+            type: "GET",
+            url: "/calendar_events/" + event_id + '/edit' ,
+            success: function(data) {
+                $(modal_holder_selector).html(data).find(modal_selector).modal();
+            }
+        }).done(function (result) {
+            (console.log('ok'))
+        });
+    }
+    
+    
+    function new_event(start_date, all_day){
+
+        $.ajax({
+            type: "GET",
+            url: "/calendar_events/new" ,
+            data: {calendar_event: {start_date: start_date, end_date: start_date, all_day: all_day}},
+            success: function(data) {
+                $(modal_holder_selector).html(data).find(modal_selector).modal();
+            }
+        }).done(function (result) {
+            (console.log('ok'))
         });
     }
 
