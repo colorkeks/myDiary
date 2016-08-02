@@ -52,13 +52,13 @@
 <div class="container">
   <div class="row">
     <div class="col-lg-9">
+      <div id="modal-holder"></div>
       <%= bootstrap_flash %>
       <%= yield %>
     </div>
     <div class="col-lg-3">
-      <% if params[:controller] == 'table' %>
-          <%= render partial: 'calendar_events/form' %>
-      <% end %>
+      <%= link_to 'Create category', new_calendar_event_path,
+                  data: { modal: true }, class: 'btn btn-default' %>
     </div>
   </div><!--/row-->
 </div> <!-- /container -->

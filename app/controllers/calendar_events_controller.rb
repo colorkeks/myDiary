@@ -1,5 +1,6 @@
 class CalendarEventsController < ApplicationController
   before_action :set_calendar_event, only: [:ajax_update, :show, :edit, :update, :destroy]
+  respond_to :html, :json
 
   # GET /calendar_events
   # GET /calendar_events.json
@@ -15,26 +16,17 @@ class CalendarEventsController < ApplicationController
   # GET /calendar_events/new
   def new
     @calendar_event = CalendarEvent.new
+    respond_modal_with @calendar_event
   end
 
   # GET /calendar_events/1/edit
   def edit
+    respond_modal_with @calendar_event
   end
 
-  # POST /calendar_events
-  # POST /calendar_events.json
   def create
     @calendar_event = CalendarEvent.new(calendar_event_params)
-
-    respond_to do |format|
-      if @calendar_event.save
-        format.html { redirect_to table_index_path, notice: 'Calendar event was successfully created.' }
-        format.json { render :show, status: :created, location: @calendar_event }
-      else
-        format.html { render :new }
-        format.json { render json: @calendar_event.errors, status: :unprocessable_entity }
-      end
-    end
+    respond_modal_with @calendar_event
   end
 
   def ajax_update
@@ -50,25 +42,15 @@ class CalendarEventsController < ApplicationController
   # PATCH/PUT /calendar_events/1
   # PATCH/PUT /calendar_events/1.json
   def update
-    respond_to do |format|
-      if @calendar_event.update(calendar_event_params)
-        format.html { redirect_to @calendar_event, notice: 'Calendar event was successfully updated.' }
-        format.json { render :show, status: :ok, location: @calendar_event }
-      else
-        format.html { render :edit }
-        format.json { render json: @calendar_event.errors, status: :unprocessable_entity }
-      end
-    end
+    @calendar_event.update(calendar_event_params)
+    respond_modal_with @calendar_event
   end
 
   # DELETE /calendar_events/1
   # DELETE /calendar_events/1.json
   def destroy
     @calendar_event.destroy
-    respond_to do |format|
-      format.html { redirect_to table_index_path, notice: 'Calendar event was successfully destroyed.' }
-      format.json { head :no_content }
-    end
+    respond_modal_with @calendar_event
   end
 
   private

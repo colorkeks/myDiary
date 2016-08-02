@@ -25,8 +25,8 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 
 
 gem 'jquery-ui-rails'
-
-
+gem 'simple_form'
+gem 'responders'
 gem 'twitter-bootstrap-rails', :git => 'https://github.com/seyhunak/twitter-bootstrap-rails.git', :branch => 'master'
 
 # Use ActiveModel has_secure_password
