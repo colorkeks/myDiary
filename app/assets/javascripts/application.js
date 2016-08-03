@@ -13,6 +13,7 @@
 //= require jquery
 //= require jquery_ujs
 //= require jquery-ui
+//= require jquery.datetimepicker
 //= require turbolinks
 //= require twitter/bootstrap
 //= require_tree .
@@ -21,4 +22,5 @@
 $(document).on('turbolinks:load', function () {
     modal_listener();
     events_listners();
+    init_datetime_picker();
 });

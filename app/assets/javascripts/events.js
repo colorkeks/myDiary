@@ -32,8 +32,8 @@ function events_listners() {
     $('.date').droppable({
         drop: function () {
             $(this).css('background', 'rgba(133, 255, 179, 0.66)')
-            var endDate = getNewEndDate($(this).data('date'), $(".ui-draggable-dragging").data('start-date'), $(".ui-draggable-dragging").data('end-date'));
-            ajax_event_update_with_reload($(".ui-draggable-dragging").data('id'), $(this).data('date'), endDate, $(".ui-draggable-dragging").data('all-day'));
+            var dates = get_new_start_and_end_date($(this).data('date'), $(".ui-draggable-dragging").data('start-date'), $(".ui-draggable-dragging").data('end-date'));
+            ajax_event_update_with_reload($(".ui-draggable-dragging").data('id'), dates[0], dates[1], $(".ui-draggable-dragging").data('all-day'));
 
         },
         over: function () {
@@ -174,17 +174,23 @@ function events_listners() {
     }
 
 
+
 // HELPERS
-    function getNewEndDate(newStartDate, oldStartDate, oldEndDate) {
+    function get_new_start_and_end_date(newStartDate, oldStartDate, oldEndDate) {
         newStartDate = new Date(newStartDate);
         oldStartDate = new Date(oldStartDate);
         oldEndDate = new Date(oldEndDate);
 
+        // Расчет стартовой даты
+        newStartDate.setHours(oldStartDate.getHours());
+        newStartDate.setMinutes(oldStartDate.getMinutes());
 
+        // Расчет конечной даты
+        var newEndDate = new Date(oldEndDate);
         var delta = new Date(newStartDate - oldStartDate);
-        var date = new Date(oldEndDate);
-        date.setDate(oldEndDate.getDate() + Math.round(delta / 1000 / 60 / 60 / 24));
-        return date;
+        newEndDate.setDate(oldEndDate.getDate() + Math.round(delta / 1000 / 60 / 60 / 24));
+
+        return [newStartDate, newEndDate];
     }
 
     function calc_date(dates, ui) {
@@ -204,12 +210,12 @@ function events_listners() {
         var end_date = new Date($(event.target).data('end-date'));
 
 //    На основе высоты и отступа считаем время
-        var top = ui.position.top;
-        var startHour = Math.floor(top / 100);
-        var startMinute = Math.floor(((top - startHour * 100) * 60) / 100  + 1);
-        
+        var top = Math.abs(ui.position.top);
+        var startHour = top / 100;
+        var startMinute = Math.floor(((top % 100) * 60) / 100);
+
         var endHour = Math.floor((height + top) / 100);
-        var endMinute = Math.floor(((height + top - endHour * 100) * 60) / 100 );
+        var endMinute = Math.floor(((height + top - endHour * 100) * 60) / 100);
 
         start_date.setHours(startHour);
         start_date.setMinutes(startMinute);

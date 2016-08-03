@@ -26,7 +26,8 @@ class CalendarEventsController < ApplicationController
 
   def create
     @calendar_event = CalendarEvent.new(calendar_event_params)
-    respond_modal_with @calendar_event
+    @calendar_event.save
+    respond_modal_with @calendar_event, :location => :back
   end
 
   def ajax_update
@@ -43,14 +44,14 @@ class CalendarEventsController < ApplicationController
   # PATCH/PUT /calendar_events/1.json
   def update
     @calendar_event.update(calendar_event_params)
-    respond_modal_with @calendar_event
+    respond_modal_with @calendar_event, :location => :back
   end
 
   # DELETE /calendar_events/1
   # DELETE /calendar_events/1.json
   def destroy
     @calendar_event.destroy
-    respond_modal_with @calendar_event
+    respond_modal_with @calendar_event, :location => :back
   end
 
   private

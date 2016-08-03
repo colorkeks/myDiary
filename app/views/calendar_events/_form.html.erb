@@ -1,9 +1,6 @@
 <%= simple_form_for(@calendar_event, remote: request.xhr?, html: {data: {modal: true}, class: 'form-horizontal'}) do |f| %>
     <% if @calendar_event.errors.any? %>
-        <div id="error_explanation">
-          <h2><%= pluralize(@calendar_event.errors.count, "error") %> prohibited this calendar_event from being
-            saved:</h2>
-
+        <div id="error_explanation" class="alert alert-danger">
           <ul>
             <% @calendar_event.errors.full_messages.each do |message| %>
                 <li><%= message %></li>
@@ -14,17 +11,27 @@
 
     <%= f.input :title, input_html: {class: 'form-control'} %>
 
-    <%= f.input :all_day, input_html: {class: 'form-control'} %>
+    <% if @calendar_event.all_day.nil? %>
+        <%= f.input :all_day %>
+    <% else %>
+        <%= f.input :all_day, as: :hidden %>
+    <% end %>
 
     <!--TODO DATETIME PICKER-->
-    <%= f.input :start_date, input_html: {class: 'form-control'} %>
+    <%= f.input :start_date, as: :string, input_html: {class: 'form-control', id: 'start_date_picker',
+                                                       value: @calendar_event.start_date ? @calendar_event.start_date.strftime('%d.%m.%Y %H:%M') : '' }%>
     <!--TODO DATETIME PICKER-->
-    <%= f.input :end_date, input_html: {class: 'form-control'} %>
+    <%= f.input :end_date, as: :string, input_html: {class: 'form-control datetimepicker', id: 'end_date_picker',
+                                                     value: @calendar_event.end_date ? @calendar_event.end_date.strftime('%d.%m.%Y %H:%M') : '' }%>
 
     <div class="actions">
-      <%= f.submit  class: 'btn btn-primary' %>
-      <% if params[:action] == 'edit'%>
-          <%= link_to 'Destroy', @calendar_event, class: 'btn btn-danger', method: :delete, data: { confirm: 'Are you sure?' } %>
+      <%= f.submit class: 'btn btn-primary' %>
+      <% if params[:action] == 'edit' %>
+          <%= link_to 'Destroy', @calendar_event, class: 'btn btn-danger', method: :delete, data: {confirm: 'Are you sure?'} %>
       <% end %>
     </div>
 <% end %>
+
+<script>
+  init_datetime_picker();
+</script>

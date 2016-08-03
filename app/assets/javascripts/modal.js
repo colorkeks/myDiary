@@ -1,4 +1,3 @@
-
 function modal_listener() {
     var modal_holder_selector, modal_selector;
     modal_holder_selector = '#modal-holder';

@@ -78,7 +78,7 @@
           <div class="day-scrollable">
             <div style="position: relative">
                 <table class="week_table_row">
-                  <% (0 .. 84600).step(1800) do |hour| %>
+                  <% (0 .. 84600).step(1800).with_index do |hour| %>
                       <% time = Time.at(hour).utc %>
                       <tr>
                         <td class="hours"><%= time.strftime('%H:%M') %></td>

@@ -28,6 +28,7 @@ gem 'jquery-ui-rails'
 gem 'simple_form'
 gem 'responders'
 gem 'twitter-bootstrap-rails', :git => 'https://github.com/seyhunak/twitter-bootstrap-rails.git', :branch => 'master'
+gem 'jquery-datetimepicker-rails'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'

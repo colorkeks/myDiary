@@ -13,12 +13,4 @@ class ModalResponder < ActionController::Responder
   def default_render(*args)
     render(*args)
   end
-
-  def redirect_to(options)
-    if request.xhr?
-      head :ok, location: controller.url_for(options)
-    else
-      controller.redirect_to(options)
-    end
-  end
 end
