@@ -15,35 +15,31 @@
 
           <!--Если начало и конец на одной неделе-->
           <% if start_included && end_included %>
-              <td colspan="<%= end_date.cwday - start_date.cwday + 1 %>">
-                <div <%= event_data %> class="event week_event <%= resizable_class %>">
-                  <%= event.title %>
-                </div>
-              </td>
+              <% colpan =  end_date.cwday - start_date.cwday + 1 %>
                 <!--Для длительных событый которые занимают всю неделю+ -->
           <% elsif key.include?(date_range.first) && key.include?(date_range.last) %>
-              <td colspan="7">
-                <div <%= event_data %> class="event week_event">
-                  <%= event.title %>
-                </div>
-              </td>
+              <% colpan =  7 %>
+              <% resizable_class = ''%>
                 <!--Если только начало на этой неделе-->
           <% elsif start_included %>
               <% max = 8 - start_date.cwday %>
               <% current = (end_date - start_date).to_i %>
-              <td colspan="<%= current > max ? max : current %>">
-                <div <%= event_data %> class="event week_event">
-                  <%= event.title %>
-                </div>
-              </td>
+              <% colpan = current > max ? max : current %>
+              <% resizable_class = ''%>
                 <!--Если только конец на этой неделе-->
           <% elsif end_included %>
-              <td colspan="<%= end_date.cwday %>">
-                <div <%= event_data %> class="event week_event <%= resizable_class %>">
-                  <%= event.title %>
-                </div>
-              </td>
+              <% colpan = end_date.cwday %>
           <% end %>
+          <td colspan="<%= colpan %>">
+            <div <%= event_data %> class="event week_event ">
+              <%= event.title %>
+              <% if !resizable_class.blank? %>
+                  <div style="float: right" class="<%= resizable_class %>">
+                    <span class="glyphicon glyphicon-forward" aria-hidden="true"></span>
+                  </div>
+              <% end %>
+            </div>
+          </td>
 
           <% if end_included%>
               <% (7 - end_date.cwday).times do %>
