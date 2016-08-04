@@ -54,8 +54,6 @@
                   <div class="all_day_scrollable">
                     <table>
                       <tbody class="all_day_content">
-                      <!-- TODO ADD RESIZABLE-->
-                      <!-- TODO DRAG AND DROP (нужно больше боли !) -->
                       <% (sorted_events.select { |key| key === start_date }).each do |pair| %>
                           <% pair.fetch(1).each do |event| %>
                               <% next if !event.all_day %>

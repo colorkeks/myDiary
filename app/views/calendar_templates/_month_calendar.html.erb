@@ -62,9 +62,6 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <!-- TODO DRAG AND DROP (нужно больше боли !) -->
-                    <!-- TODO ADD RESIZABLE-->
-                    <!-- TODO ЕСЛИ НЕ ALLDAY ТО РЕСАЙЗИТЬ НЕЛЬЗЯ-->
                     <% if (sorted_events.select { |key| !(key.to_a & week.to_a).empty? }).empty? %>
                         <tr>
                           <% week.each do |day| %>

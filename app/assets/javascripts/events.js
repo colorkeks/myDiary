@@ -9,15 +9,13 @@ function events_listners() {
         containment: $(this).parents().find('.drag-container'),
         helper: 'clone',
         start: function () { //hide original when showing clone
-            $('.event').hide();
+            on_drag_start(this);
             $('*[data-id=' + $(this).parent().data('id') + ']').show();
             $(".ui-draggable-dragging").parent().show();
-            $(this).parents().find('.event-content-container').css('overflow-y', 'visible').css('width', '100%');
+
         },
         stop: function () { //show original when hiding clone
-            $(this).show();
-            $('.event').show();
-            $(this).parents().find('.event-content-container').css('overflow-y', 'scroll').css('width', 'calc(100% + 15px)');
+            on_drag_stop(this);
         }
     });
 
@@ -35,14 +33,11 @@ function events_listners() {
         containment: $(this).parents().find('.drag-container'),
         helper: 'clone',
         start: function () { //hide original when showing clone
-            $('.event').hide();
+            on_drag_start(this);
             $(".ui-draggable-dragging").show();
-            $(this).parents().find('.event-content-container').css('overflow-y', 'visible').css('width', '100%');
         },
         stop: function () { //show original when hiding clone
-            $(this).show();
-            $('.event').show();
-            $(this).parents().find('.event-content-container').css('overflow-y', 'scroll').css('width', 'calc(100% + 15px)');
+            on_drag_stop(this);
         }
     }).click(function () {
         if ($(this).data('dragging/resizable')) return;
@@ -275,6 +270,19 @@ function events_listners() {
 
     function AddZero(num) {
         return (num >= 0 && num < 10) ? "0" + num : num + "";
+    }
+
+
+
+    function on_drag_start(_this) {
+        $('.event').hide();
+        $(_this).parents().find('.event-content-container').css('overflow-y', 'visible').css('width', '100%');
+    }
+
+    function on_drag_stop(_this) {
+        $(_this).show();
+        $('.event').show();
+        $(_this).parents().find('.event-content-container').css('overflow-y', 'scroll').css('width', 'calc(100% + 15px)');
     }
 
 }
