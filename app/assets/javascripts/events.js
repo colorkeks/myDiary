@@ -4,6 +4,23 @@ function events_listners() {
     modal_holder_selector = '#modal-holder';
     modal_selector = '.modal';
 
+    // Типа ресайз который drag :D
+    $('.event-resizable').draggable({
+        containment: $(this).parents().find('.drag-container'),
+        helper: 'clone',
+        start: function () { //hide original when showing clone
+            $('.event').hide();
+            $('*[data-id=' + $(this).parent().data('id') + ']').show();
+            $(".ui-draggable-dragging").parent().show();
+            $(this).parents().find('.event-content-container').css('overflow-y', 'visible').css('width', '100%');
+        },
+        stop: function () { //show original when hiding clone
+            $(this).show();
+            $('.event').show();
+            $(this).parents().find('.event-content-container').css('overflow-y', 'scroll').css('width', 'calc(100% + 15px)');
+        }
+    });
+
 // DRAGGABLE, CLICK(THIS_EVENT) В разрезе месяца и allday
     $('.week_event').draggable({
         revert: 'invalid',
@@ -11,8 +28,6 @@ function events_listners() {
         containment: $(this).parents().find('.drag-container'),
         helper: 'clone',
         start: function () { //hide original when showing clone
-            var this_id = $(this).data('id');
-            $('*[data-id=' + this_id + ']').hide();
             $('.event').hide();
             $(".ui-draggable-dragging").show();
             $(this).parents().find('.event-content-container').css('overflow-y', 'visible').css('width', '100%');
@@ -31,10 +46,18 @@ function events_listners() {
 // DROPPABLE, CLICK(NEW_EVENT) В разрезе месяца и allday
     $('.date').droppable({
         drop: function () {
-            $(this).css('background', 'rgba(133, 255, 179, 0.66)')
-            var dates = get_new_start_and_end_date($(this).data('date'), $(".ui-draggable-dragging").data('start-date'), $(".ui-draggable-dragging").data('end-date'));
-            ajax_event_update_with_reload($(".ui-draggable-dragging").data('id'), dates[0], dates[1], $(".ui-draggable-dragging").data('all-day'));
-
+            $(this).css('background', 'rgba(133, 255, 179, 0.66)');
+            var event;
+            // проверка на то ресайзится эвент или переносится
+            if ($(".ui-draggable-dragging").hasClass('event-resizable')){
+                event = $(".ui-draggable-dragging").parent();
+                ajax_event_update_with_reload(event.data('id'), new Date(event.data('start-date')) , new Date($(this).data('date')), event.data('all_day'));
+            }
+            else {
+                event = $(".ui-draggable-dragging");
+                var dates = get_new_start_and_end_date($(this).data('date'), event.data('start-date'), event.data('end-date'));
+                ajax_event_update_with_reload(event.data('id'), dates[0], dates[1], event.data('all-day'));
+            }
         },
         over: function () {
             $(this).css('background', 'red')
@@ -43,7 +66,7 @@ function events_listners() {
             $(this).css('background', 'rgba(133, 255, 179, 0.66)')
         }
     }).click(function () {
-        new_event($(this).data('date'), true)
+        new_event($(this).data('date'), $(this).data('all-day'))
     });
 
 // DROPPABLE В разрезе ДНЯ И НЕДЕЛИ (ЧАСЫ/NOT_ALL_DAY)
@@ -65,7 +88,10 @@ function events_listners() {
         out: function () {
             $(this).css('background', 'transparent')
         }
-    });
+    }).click(function () {
+        if ($('.hour-event').data('dragging/resizable')) return;
+        new_event($(this).data('date'), $(this).data('all-day'))
+    });;
 
 // DRAGGABLE, RESIZABLE, CLICK(THIS_EVENT) В разрезе ДНЯ И НЕДЕЛИ (ЧАСЫ/NOT_ALL_DAY)
     $('.hour-event').draggable({
@@ -118,7 +144,7 @@ function events_listners() {
 
 // AJAX ОБНОВЛЕНИЕ ЭВЕНТА
     function ajax_event_update(event_id, start_date, end_date, all_day) {
-        all_day = all_day || false;
+        // all_day = all_day || false;
         $.ajax({
             type: "POST",
             url: "/calendar_events/" + event_id + "/ajax_update",
@@ -131,14 +157,14 @@ function events_listners() {
 
 // AJAX ОБНОВЛЕНИЕ ЭВЕНТА, и reload страницы(Turbolinks)
     function ajax_event_update_with_reload(event_id, start_date, end_date, all_day) {
-        all_day = all_day || false;
+        // all_day = all_day || false;
         $.ajax({
             type: "POST",
             url: "/calendar_events/" + event_id + "/ajax_update",
             dataType: 'JSON',
             data: {calendar_event: {start_date: start_date, end_date: end_date, all_day: all_day}, _method: 'put'}
         }).done(function (result) {
-            //  TODO ПОДУМАТЬ КАК СДЕЛАТЬ БЫТРЕЙ
+            //  TODO ПЕРЕЗАГРУЖАТЬ НЕ ВСЮ СТРАНИЦУ А ТОЛЬКО PARTIAL C ПОМОЩЬЮ ESCAPE_JAVASCRIPT
             Turbolinks.clearCache();
             Turbolinks.visit(location);
         });

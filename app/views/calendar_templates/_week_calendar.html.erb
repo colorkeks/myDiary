@@ -23,7 +23,7 @@
     <tr class="table-header">
       <td class="hours">Hours</td>
       <% date_range.slice(0, 7).each do |day| %>
-          <%= content_tag :td, class: calendar.td_classes_for(day) << 'date', data: {date: day} do %>
+          <%= content_tag :td, class: calendar.td_classes_for(day) << 'date', data: {date: day.to_date, all_day: true, modal: true} do %>
               <%= day.strftime('%A %d') %>
           <% end %>
       <% end %>
@@ -77,6 +77,8 @@
 
           <div class="day-scrollable">
             <div style="position: relative">
+              <!--TODO ПОНЯТЬ КАК СДЕЛАТЬ ЭТУ СЕТКУ МЕЖДУ week-event-content и events(z-index)  -->
+              <!--<div style="position: relative; z-index: 2">-->
                 <table class="week_table_row">
                   <% (0 .. 84600).step(1800).with_index do |hour| %>
                       <% time = Time.at(hour).utc %>

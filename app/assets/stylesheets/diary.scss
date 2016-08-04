@@ -117,6 +117,11 @@ td {
     &.hour-event{
       margin: 0;
     }
+
+    .event-resizable{
+      background: #18758c;
+      border-radius: 5px;
+    }
   }
 
   thead {

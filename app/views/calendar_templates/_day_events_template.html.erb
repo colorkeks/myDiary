@@ -3,7 +3,7 @@
         <% end_date = event.end_date.to_date %>
         <% start_included = date_range.include?(start_date) %>
         <% end_included = date_range.include?(end_date) %>
-        <% resizable_class = event.all_day ? 'resizable' : '' %>
+        <% resizable_class = event.all_day ? 'event-resizable' : '' %>
         <% event_data = 'data-id=' + event.id.to_s + ' data-all-day=' + event.all_day.to_s + ' data-start-date=' +
                     event.start_date.to_datetime.to_s + ' data-end-date=' + event.end_date.to_datetime.to_s  %>
         <tr>

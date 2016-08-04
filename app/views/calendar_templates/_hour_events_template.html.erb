@@ -1,5 +1,5 @@
 <% all_events = sorted_events.select { |key| key === day } %>
-<td class="hour-date" data-date="<%= day%>" style="position: relative">
+<td class="hour-date" data-date="<%= day.to_date %>" data-all-day="<%= false %>" style="position: relative">
   <% if !all_events.empty? %>
       <!--TODO СДЕЛАТЬ РАСЧЕТЫ ЧТОБЫ ЭВЕНТЫ АДАПТИВНО РАСПОЛАГАЛИСЬ(КАК В FULLCALENDAR НАПРИМЕР)-->
       <% all_events.each do |pair| %>
