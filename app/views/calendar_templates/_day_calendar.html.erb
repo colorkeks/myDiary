@@ -18,11 +18,11 @@
     </div>
   </div>
 
-  <table class="table day_table">
+  <table class="table day_table droppable_table">
     <thead>
     <tr class="table-header">
       <td class="hours">Hours</td>
-      <%= content_tag :td, class: calendar.td_classes_for(start_date) do %>
+      <%= content_tag :td, class: calendar.td_classes_for(start_date) << 'date', data: {date: start_date.to_date, all_day: true, modal: true}  do %>
           <h4><%= start_date.strftime('%A') %></h4>
       <% end %>
     </tr>
@@ -59,9 +59,11 @@
                       <% (sorted_events.select { |key| key === start_date }).each do |pair| %>
                           <% pair.fetch(1).each do |event| %>
                               <% next if !event.all_day %>
+                              <% event_data = 'data-id=' + event.id.to_s + ' data-all-day=' + event.all_day.to_s + ' data-start-date=' +
+                                  event.start_date.to_datetime.to_s + ' data-end-date=' + event.end_date.to_datetime.to_s  %>
                               <tr>
                                 <td>
-                                  <div class="event"><%= event.title %></div>
+                                  <div <%= event_data%> class="event week_event"><%= event.title %></div>
                                 </td>
                               </tr>
                           <% end %>

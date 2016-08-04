@@ -119,15 +119,26 @@ td {
     }
 
     .to_all_day{
+      width: 20%;
+      margin-right: 5%;
       background: #18758c;
       display: inline-block;
       vertical-align: top;
       z-index: 4;
+      text-align: right;
+      float: right;
+    }
+
+    .timer{
+      display: block;
+      float: left;
     }
 
     .event_title{
       display: inline-block;
-      min-width: 80%;
+      min-width: 70%;
+      text-align: left;
+      float: left;
     }
     .event-resizable{
       display: inline-block;

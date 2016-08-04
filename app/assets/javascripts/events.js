@@ -23,9 +23,9 @@ function events_listners() {
 
     // TODO МБ ЗАМОРОЧИТЬСЯ НАД СТИЛИЗАЦИЕЙ КЛОНА
     $('.to_all_day').draggable({
-        containment: $('.week_calendar'),
+        containment: $('.diary'),
         helper: 'clone',
-        appendTo: $('.week_calendar')
+        appendTo: $('.diary')
     })
 
 // DRAGGABLE, CLICK(THIS_EVENT) В разрезе месяца и allday
@@ -100,11 +100,13 @@ function events_listners() {
             $(this).css('background', 'transparent')
         }
     }).click(function () {
+        var date = $(this).data('date');
+        var all_day = $(this).data('all-day');
         // костыль чтобы модалки криво не открывались
         setTimeout(function () {
             if ($('#mainModal').hasClass('in') || $('.hour-event').data('dragging/resizable')) return;
-            new_event($(this).data('date'), $(this).data('all-day'))
-        }, 60)
+            new_event(date, all_day)
+        }, 100)
     });
 
 // DRAGGABLE, RESIZABLE, CLICK(THIS_EVENT) В разрезе ДНЯ И НЕДЕЛИ (ЧАСЫ/NOT_ALL_DAY)
