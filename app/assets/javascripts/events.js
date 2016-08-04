@@ -39,8 +39,7 @@ function events_listeners() {
             on_drag_stop(this);
         }
     }).click(function () {
-        if ($(this).data('dragging/resizable')) return;
-        show_event($(this).data('id'));
+        event_click(this);
     });
 
 // DROPPABLE, CLICK(NEW_EVENT) В разрезе месяца и allday
@@ -131,8 +130,7 @@ function events_listeners() {
             hour_event_on_drag_resize(event, ui, ui.size.height)
         }
     }).click(function () {
-        if ($(this).data('dragging/resizable')) return;
-        show_event($(this).data('id'));
+        event_click(this);
     });
 
 // AJAX ОБНОВЛЕНИЕ ЭВЕНТА, и reload страницы(Turbolinks)
@@ -269,6 +267,12 @@ function events_listeners() {
             $(event.target).data('dragging/resizable', false);
         }, 1);
     }
+
+    function event_click(_this) {
+        if ($(_this).data('dragging/resizable')) return;
+        show_event($(_this).data('id'));
+    }
+
 
 
 }
