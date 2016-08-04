@@ -109,41 +109,26 @@ function events_listeners() {
         containment: $('.event_hour_table'),
 
         start: function (event, ui) {
-            $(this).data('dragging/resizable', true);
+            hour_event_on_drag_resize_start(this);
         },
         stop: function (event, ui) {
-            var height = ui.helper.height();
-            var dates = calc_datetime(event, ui, height);
-            dates = calc_date(dates, ui);
-            ajax_event_update($(event.target).data('id'), dates[0], dates[1], $(event.target).data('all-day'), false);
-            setTimeout(function () {
-                $(event.target).data('dragging/resizable', false);
-            }, 1);
+            hour_event_on_drag_resize_stop(event, ui, true);
         },
         drag: function (event, ui) {
-            var height = ui.helper.height();
-            var dates = calc_datetime(event, ui, height);
-            change_event_time(event, dates[0], dates[1]);
+            hour_event_on_drag_resize(event, ui, ui.helper.height())
         }
     }).resizable({
         handles: 's',
         minHeight: 50,
         containment: "parent",
         start: function (event, ui) {
-            $(this).data('dragging/resizable', true);
+            hour_event_on_drag_resize_start(this);
         },
         stop: function (event, ui) {
-            var height = ui.size.height;        //нет бы сделать как в resizable
-            var dates = calc_datetime(event, ui, height);
-            ajax_event_update($(event.target).data('id'), dates[0], dates[1], $(event.target).data('all-day'), false);
-            setTimeout(function () {
-                $(event.target).data('dragging/resizable', false);
-            }, 1);
+            hour_event_on_drag_resize_stop(event, ui, false);
         },
         resize: function (event, ui) {
-            var height = ui.size.height;        //нет бы сделать как в resizable
-            var dates = calc_datetime(event, ui, height);
-            change_event_time(event, dates[0], dates[1]);
+            hour_event_on_drag_resize(event, ui, ui.size.height)
         }
     }).click(function () {
         if ($(this).data('dragging/resizable')) return;
@@ -263,5 +248,27 @@ function events_listeners() {
         $('.event').show();
         $(_this).parents().find('.event-content-container').css('overflow-y', 'scroll').css('width', 'calc(100% + 15px)');
     }
+
+    function hour_event_on_drag_resize(event, ui, height){
+        var  dates = calc_datetime(event, ui, height);
+        change_event_time(event, dates[0], dates[1]);
+    }
+
+    function hour_event_on_drag_resize_start() {
+        $(this).data('dragging/resizable', true);
+    }
+
+    function hour_event_on_drag_resize_stop(event, ui, isDraggable) {
+        var height = isDraggable ? ui.helper.height() : ui.size.height;
+        var dates = calc_datetime(event, ui, height);
+        if (isDraggable) {
+            dates = calc_date(dates, ui);
+        }
+        ajax_event_update($(event.target).data('id'), dates[0], dates[1], $(event.target).data('all-day'), false);
+        setTimeout(function () {
+            $(event.target).data('dragging/resizable', false);
+        }, 1);
+    }
+
 
 }
