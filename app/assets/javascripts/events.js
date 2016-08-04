@@ -89,9 +89,12 @@ function events_listners() {
             $(this).css('background', 'transparent')
         }
     }).click(function () {
-        if ($('.hour-event').data('dragging/resizable')) return;
-        new_event($(this).data('date'), $(this).data('all-day'))
-    });;
+        // костыль чтобы модалки криво не открывались
+        setTimeout(function () {
+            if ($('#mainModal').hasClass('in') || $('.hour-event').data('dragging/resizable')) return;
+            new_event($(this).data('date'), $(this).data('all-day'))
+        }, 60)
+    });
 
 // DRAGGABLE, RESIZABLE, CLICK(THIS_EVENT) В разрезе ДНЯ И НЕДЕЛИ (ЧАСЫ/NOT_ALL_DAY)
     $('.hour-event').draggable({
@@ -186,7 +189,6 @@ function events_listners() {
     
     
     function new_event(start_date, all_day){
-
         $.ajax({
             type: "GET",
             url: "/calendar_events/new" ,
