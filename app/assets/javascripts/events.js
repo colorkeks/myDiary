@@ -1,5 +1,4 @@
-
-function events_listners() {
+function events_listeners() {
     var modal_holder_selector, modal_selector;
     modal_holder_selector = '#modal-holder';
     modal_selector = '.modal';
@@ -24,7 +23,7 @@ function events_listners() {
         containment: $('.diary'),
         helper: 'clone',
         appendTo: $('.diary')
-    })
+    });
 
 // DRAGGABLE, CLICK(THIS_EVENT) В разрезе месяца и allday
     $('.week_event').draggable({
@@ -44,25 +43,24 @@ function events_listners() {
         show_event($(this).data('id'));
     });
 
-
 // DROPPABLE, CLICK(NEW_EVENT) В разрезе месяца и allday
     $('.date').droppable({
         drop: function () {
             $(this).css('background', 'rgba(133, 255, 179, 0.66)');
             var event;
             // проверка на то ресайзится эвент или переносится
-            if ($(".ui-draggable-dragging").hasClass('event-resizable')){
+            if ($(".ui-draggable-dragging").hasClass('event-resizable')) {
                 event = $(".ui-draggable-dragging").parent();
-                ajax_event_update_with_reload(event.data('id'), new Date(event.data('start-date')) , new Date($(this).data('date')), event.data('all_day'));
+                ajax_event_update(event.data('id'), new Date(event.data('start-date')), new Date($(this).data('date')), event.data('all_day'), true);
             }
-            else if ($(".ui-draggable-dragging").hasClass('to_all_day')){
+            else if ($(".ui-draggable-dragging").hasClass('to_all_day')) {
                 event = $(".ui-draggable-dragging");
-                ajax_event_update_with_reload(event.data('id'), new Date($(this).data('date')) , new Date($(this).data('date')), true);
+                ajax_event_update(event.data('id'), new Date($(this).data('date')), new Date($(this).data('date')), true, true);
             }
             else {
                 event = $(".ui-draggable-dragging");
                 var dates = get_new_start_and_end_date($(this).data('date'), event.data('start-date'), event.data('end-date'));
-                ajax_event_update_with_reload(event.data('id'), dates[0], dates[1], event.data('all-day'));
+                ajax_event_update(event.data('id'), dates[0], dates[1], event.data('all-day'), true);
             }
         },
         over: function () {
@@ -86,7 +84,7 @@ function events_listners() {
             var newEndDate = new Date(newStartDate);
             newEndDate.setHours(1);
 
-            ajax_event_update_with_reload($(".ui-draggable-dragging").data('id'), newStartDate, newEndDate, false);
+            ajax_event_update($(".ui-draggable-dragging").data('id'), newStartDate, newEndDate, false, true);
         },
         over: function () {
             $(this).css('background', 'rgba(133, 255, 179, 0.66)')
@@ -117,7 +115,7 @@ function events_listners() {
             var height = ui.helper.height();
             var dates = calc_datetime(event, ui, height);
             dates = calc_date(dates, ui);
-            ajax_event_update($(event.target).data('id'), dates[0], dates[1], $(event.target).data('all-day'));
+            ajax_event_update($(event.target).data('id'), dates[0], dates[1], $(event.target).data('all-day'), false);
             setTimeout(function () {
                 $(event.target).data('dragging/resizable', false);
             }, 1);
@@ -137,7 +135,7 @@ function events_listners() {
         stop: function (event, ui) {
             var height = ui.size.height;        //нет бы сделать как в resizable
             var dates = calc_datetime(event, ui, height);
-            ajax_event_update($(event.target).data('id'), dates[0], dates[1], $(event.target).data('all-day'));
+            ajax_event_update($(event.target).data('id'), dates[0], dates[1], $(event.target).data('all-day'), false);
             setTimeout(function () {
                 $(event.target).data('dragging/resizable', false);
             }, 1);
@@ -152,22 +150,8 @@ function events_listners() {
         show_event($(this).data('id'));
     });
 
-
-// AJAX ОБНОВЛЕНИЕ ЭВЕНТА
-    function ajax_event_update(event_id, start_date, end_date, all_day) {
-        // all_day = all_day || false;
-        $.ajax({
-            type: "POST",
-            url: "/calendar_events/" + event_id + "/ajax_update",
-            dataType: 'JSON',
-            data: {calendar_event: {start_date: start_date, end_date: end_date, all_day: all_day}, _method: 'put'}
-        }).done(function (result) {
-            (console.log(result))
-        });
-    }
-
 // AJAX ОБНОВЛЕНИЕ ЭВЕНТА, и reload страницы(Turbolinks)
-    function ajax_event_update_with_reload(event_id, start_date, end_date, all_day) {
+    function ajax_event_update(event_id, start_date, end_date, all_day, reload) {
         // all_day = all_day || false;
         $.ajax({
             type: "POST",
@@ -176,40 +160,40 @@ function events_listners() {
             data: {calendar_event: {start_date: start_date, end_date: end_date, all_day: all_day}, _method: 'put'}
         }).done(function (result) {
             //  TODO ПЕРЕЗАГРУЖАТЬ НЕ ВСЮ СТРАНИЦУ А ТОЛЬКО PARTIAL C ПОМОЩЬЮ ESCAPE_JAVASCRIPT
-            Turbolinks.clearCache();
-            Turbolinks.visit(location);
+            if (reload) {
+                Turbolinks.clearCache();
+                Turbolinks.visit(location);
+            }
+            else
+                console.log(result);
         });
     }
-
 
     function show_event(event_id) {
-        
+
         $.ajax({
             type: "GET",
-            url: "/calendar_events/" + event_id + '/edit' ,
-            success: function(data) {
+            url: "/calendar_events/" + event_id + '/edit',
+            success: function (data) {
                 $(modal_holder_selector).html(data).find(modal_selector).modal();
             }
         }).done(function (result) {
             (console.log('ok'))
         });
     }
-    
-    
-    function new_event(start_date, all_day){
+
+    function new_event(start_date, all_day) {
         $.ajax({
             type: "GET",
-            url: "/calendar_events/new" ,
+            url: "/calendar_events/new",
             data: {calendar_event: {start_date: start_date, end_date: start_date, all_day: all_day}},
-            success: function(data) {
+            success: function (data) {
                 $(modal_holder_selector).html(data).find(modal_selector).modal();
             }
         }).done(function (result) {
             (console.log('ok'))
         });
     }
-
-
 
 // HELPERS
     function get_new_start_and_end_date(newStartDate, oldStartDate, oldEndDate) {
@@ -240,7 +224,6 @@ function events_listners() {
         return [start_date, end_date];
     }
 
-
     function calc_datetime(event, ui, height) {
         var start_date = new Date($(event.target).data('start-date'));
         var end_date = new Date($(event.target).data('end-date'));
@@ -261,18 +244,14 @@ function events_listners() {
         return [start_date, end_date];
     }
 
-
     function change_event_time(event, start_date, end_date) {
         $(event.target).find('.start_date').text(AddZero(start_date.getHours()) + ':' + AddZero(start_date.getMinutes()) + ' - ');
         $(event.target).find('.end_date').text(AddZero(end_date.getHours()) + ':' + AddZero(end_date.getMinutes()));
     }
 
-
     function AddZero(num) {
         return (num >= 0 && num < 10) ? "0" + num : num + "";
     }
-
-
 
     function on_drag_start(_this) {
         $('.event').hide();

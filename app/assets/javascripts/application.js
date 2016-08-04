@@ -21,6 +21,6 @@
 
 $(document).on('turbolinks:load', function () {
     modal_listener();
-    events_listners();
+    events_listeners();
     init_datetime_picker();
 });
