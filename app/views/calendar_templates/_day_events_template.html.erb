@@ -32,7 +32,9 @@
           <% end %>
           <td colspan="<%= colpan %>">
             <div <%= event_data %> class="event week_event ">
-              <%= event.title %>
+              <div class="event_title">
+                <%= event.title %>
+              </div>
               <% if !resizable_class.blank? %>
                   <div style="float: right" class="<%= resizable_class %>">
                     <span class="glyphicon glyphicon-forward" aria-hidden="true"></span>

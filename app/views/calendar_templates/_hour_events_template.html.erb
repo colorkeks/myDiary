@@ -22,7 +22,12 @@
               <div <%= event_data %> class="event hour-event" style="position: absolute;
                   height: <%= event_height %>px; top:<%= top_position %>px;
                   <%= position %>;width: <%= width %>; overflow: hidden ">
-                <%= event.title %>
+                <div class="event_title">
+                  <%= event.title %>
+                </div>
+                <div <%= event_data %> class="to_all_day" title="Drag to green date for switch to all_day">
+                  <span class="glyphicon glyphicon-eject" aria-hidden="true"></span>
+                </div>
                 <div>
                     <span class="start_date">
                     <%= event.start_date.strftime('%H:%M') %> -

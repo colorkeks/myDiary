@@ -118,7 +118,19 @@ td {
       margin: 0;
     }
 
+    .to_all_day{
+      background: #18758c;
+      display: inline-block;
+      vertical-align: top;
+      z-index: 4;
+    }
+
+    .event_title{
+      display: inline-block;
+      min-width: 80%;
+    }
     .event-resizable{
+      display: inline-block;
       background: #18758c;
       border-radius: 5px;
     }

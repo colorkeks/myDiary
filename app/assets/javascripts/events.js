@@ -21,6 +21,13 @@ function events_listners() {
         }
     });
 
+    // TODO МБ ЗАМОРОЧИТЬСЯ НАД СТИЛИЗАЦИЕЙ КЛОНА
+    $('.to_all_day').draggable({
+        containment: $('.week_calendar'),
+        helper: 'clone',
+        appendTo: $('.week_calendar')
+    })
+
 // DRAGGABLE, CLICK(THIS_EVENT) В разрезе месяца и allday
     $('.week_event').draggable({
         revert: 'invalid',
@@ -52,6 +59,10 @@ function events_listners() {
             if ($(".ui-draggable-dragging").hasClass('event-resizable')){
                 event = $(".ui-draggable-dragging").parent();
                 ajax_event_update_with_reload(event.data('id'), new Date(event.data('start-date')) , new Date($(this).data('date')), event.data('all_day'));
+            }
+            else if ($(".ui-draggable-dragging").hasClass('to_all_day')){
+                event = $(".ui-draggable-dragging");
+                ajax_event_update_with_reload(event.data('id'), new Date($(this).data('date')) , new Date($(this).data('date')), true);
             }
             else {
                 event = $(".ui-draggable-dragging");
