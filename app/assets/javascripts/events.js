@@ -106,10 +106,13 @@ function events_listeners() {
         containment: $('.event_hour_table'),
 
         start: function (event, ui) {
+            if ($(this).parents('.day-event-content').length > 0)
+                $( ".hour-event" ).draggable( "option", "grid", [0, 1] );
             hour_event_on_drag_resize_start(this);
         },
         stop: function (event, ui) {
-            hour_event_on_drag_resize_stop(event, ui, true);
+            var isDraggableX = $(this).parents('.day-event-content').length <= 0;
+            hour_event_on_drag_resize_stop(event, ui,  ui.helper.height(), isDraggableX);
         },
         drag: function (event, ui) {
             hour_event_on_drag_resize(event, ui, ui.helper.height())
@@ -122,7 +125,7 @@ function events_listeners() {
             hour_event_on_drag_resize_start(this);
         },
         stop: function (event, ui) {
-            hour_event_on_drag_resize_stop(event, ui, false);
+            hour_event_on_drag_resize_stop(event, ui, ui.size.height, false);
         },
         resize: function (event, ui) {
             hour_event_on_drag_resize(event, ui, ui.size.height)
@@ -199,8 +202,8 @@ function events_listeners() {
         var end_date = dates[1];
         var left = ui.position.left;
 
-        start_date.setDate(start_date.getDate() + Math.floor(left / 110));
-        end_date.setDate(end_date.getDate() + Math.floor(left / 110));
+        start_date.setDate(start_date.getDate() + Math.floor(left / 117));
+        end_date.setDate(end_date.getDate() + Math.floor(left / 117));
 
         return [start_date, end_date];
     }
@@ -253,10 +256,9 @@ function events_listeners() {
         $(this).data('dragging/resizable', true);
     }
 
-    function hour_event_on_drag_resize_stop(event, ui, isDraggable) {
-        var height = isDraggable ? ui.helper.height() : ui.size.height;
+    function hour_event_on_drag_resize_stop(event, ui, height, isDraggableX) {
         var dates = calc_datetime(event, ui, height);
-        if (isDraggable) {
+        if (isDraggableX) {
             dates = calc_date(dates, ui);
         }
         ajax_event_update($(event.target).data('id'), dates[0], dates[1], $(event.target).data('all-day'), false);

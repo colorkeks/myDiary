@@ -55,7 +55,7 @@ td {
   width: 117px;
 }
 
-.droppable_table{
+.droppable_table {
   .date {
     text-align: center;
     border: 1px solid grey;
@@ -64,11 +64,12 @@ td {
 }
 
 .table {
-  min-width: 869px;
+  width: 869px;
   &.event_hour_table {
     background: transparent;
     margin-bottom: 0;
     border-bottom: none;
+    display: block;
   }
 
   .week_table_row {
@@ -84,6 +85,10 @@ td {
   &.week_table, &.day_table {
     margin-bottom: 0;
     margin-top: 0;
+
+    .event_hour_table {
+      display: table;
+    }
 
     .week-event-content, .day-event-content {
       position: absolute;
@@ -114,11 +119,11 @@ td {
     margin: 1px 0 1px 0;
     z-index: 2;
 
-    &.hour-event{
+    &.hour-event {
       margin: 0;
     }
 
-    .to_all_day{
+    .to_all_day {
       width: 20%;
       margin-right: 5%;
       background: #18758c;
@@ -129,18 +134,18 @@ td {
       float: right;
     }
 
-    .timer{
+    .timer {
       display: block;
       float: left;
     }
 
-    .event_title{
+    .event_title {
       display: inline-block;
       min-width: 70%;
       text-align: left;
       float: left;
     }
-    .event-resizable{
+    .event-resizable {
       display: inline-block;
       background: #18758c;
       border-radius: 5px;
@@ -154,7 +159,6 @@ td {
     }
 
   }
-
 
   .event-content-container {
     position: absolute;
@@ -229,34 +233,35 @@ td {
       width: inherit;
     }
 
-
     .all_day_content {
-      width: 869px;
+      width: 833px;
+      height: 120px;
+      display: block;
+      overflow-y: auto;
+      overflow-x: hidden;
       td {
         width: 117px;
       }
 
-      &.day_calendar{
+      &.day_calendar {
         width: 100%;
-          td{
-            width: 100%;
-          }
+        td {
+          width: 818px;;
+        }
       }
     }
 
     .all_day_scrollable {
       height: 120px;
-      overflow-y: auto;
-      overflow-x: hidden;
 
-      td{
+      td {
         border: none;
       }
     }
   }
 }
 
-.day-scrollable{
+.day-scrollable {
   position: relative;
   height: 450px;
   margin-bottom: 20px;
@@ -265,26 +270,26 @@ td {
   overflow-x: hidden;
 }
 
-.diary{
+.diary {
   width: 100%;
   max-width: 869px;
 }
 
-.day-time{
+.day-time {
   z-index: 100;
   position: absolute;
 }
 
-.month_table_row{
+.month_table_row {
   height: 110px;
-  thead{
+  thead {
     display: block;
-    th{
+    th {
       width: 124px;
     }
   }
 
-  .month_table_body{
+  .month_table_body {
     display: block;
     height: 90px;
     width: calc(100% + 15px);
@@ -304,12 +309,12 @@ td {
   }
 }
 
-.modal-content{
+.modal-content {
   width: 400px;
   margin: 0 auto;
   margin-top: 30%;
 }
 
-.actions{
+.actions {
   margin-top: 20px;
 }
