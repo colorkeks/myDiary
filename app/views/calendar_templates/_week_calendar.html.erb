@@ -62,7 +62,7 @@
                       <% (sorted_events.select { |key| !(key.to_a & date_range.to_a).empty? }).each do |pair| %>
                           <% key = pair.fetch(0) %>
                           <% events = pair.fetch(1).select { |event| event.all_day } %>
-                          <%= render partial: 'calendar_templates/day_events_template', locals: {key: key, events: events, date_range: date_range} %>
+                          <%= render partial: 'calendar_templates/day_events_template', locals: {key: key, events: events, date_range: date_range, calendarType: 'week'} %>
                       <% end %>
                       </tbody>
                     </table>

@@ -51,9 +51,9 @@
               <tr>
                 <td class="hours">AllDay</td>
                 <td>
-                  <div class="all_day_scrollable">
+                  <div class="all_day_scrollable for_day">
                     <table>
-                      <tbody class="all_day_content">
+                      <tbody class="all_day_content day_calendar">
                       <% (sorted_events.select { |key| key === start_date }).each do |pair| %>
                           <% pair.fetch(1).each do |event| %>
                               <% next if !event.all_day %>

@@ -44,7 +44,7 @@ td {
   text-align: center;
   border: 1px solid grey;
   border-top: none;
-  width: 110px;
+  width: 117px;
 }
 
 .hours {
@@ -52,7 +52,7 @@ td {
 }
 
 .day {
-  width: 110px;
+  width: 117px;
 }
 
 .droppable_table{
@@ -64,7 +64,7 @@ td {
 }
 
 .table {
-  min-width: 822px;
+  min-width: 869px;
   &.event_hour_table {
     background: transparent;
     margin-bottom: 0;
@@ -73,7 +73,7 @@ td {
 
   .week_table_row {
     .hours {
-      width: 52px;
+      width: 50px;
     }
 
     td {
@@ -206,7 +206,7 @@ td {
 
 .day_table {
   .hours {
-    width: 52px;
+    width: 50px;
   }
 
   td {
@@ -222,11 +222,26 @@ td {
     border-bottom: 5px solid #8d8d8d;
 
     .hours {
-      width: 52px;
+      width: 50px;
     }
 
     td {
       width: inherit;
+    }
+
+
+    .all_day_content {
+      width: 869px;
+      td {
+        width: 117px;
+      }
+
+      &.day_calendar{
+        width: 100%;
+          td{
+            width: 100%;
+          }
+      }
     }
 
     .all_day_scrollable {
@@ -247,11 +262,12 @@ td {
   margin-bottom: 20px;
   width: calc(100% + 15px);
   overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .diary{
   width: 100%;
-  max-width: 822px;
+  max-width: 869px;
 }
 
 .day-time{
@@ -260,7 +276,24 @@ td {
 }
 
 .month_table_row{
+  height: 110px;
+  thead{
+    display: block;
+    th{
+      width: 124px;
+    }
+  }
+
+  .month_table_body{
+    display: block;
+    height: 90px;
+    width: calc(100% + 15px);
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
   td {
+    width: 124px;
     height: 110px;
   }
 }

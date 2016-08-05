@@ -8,9 +8,8 @@ function events_listeners() {
         containment: $(this).parents().find('.drag-container'),
         helper: 'clone',
         start: function () { //hide original when showing clone
-            on_drag_start(this);
+            on_drag_start($(".ui-draggable-dragging").parent());
             $('*[data-id=' + $(this).parent().data('id') + ']').show();
-            $(".ui-draggable-dragging").parent().show();
 
         },
         stop: function () { //show original when hiding clone
@@ -32,14 +31,13 @@ function events_listeners() {
         containment: $(this).parents().find('.drag-container'),
         helper: 'clone',
         start: function () { //hide original when showing clone
-            on_drag_start(this);
-            $(".ui-draggable-dragging").show();
+            on_drag_start($(".ui-draggable-dragging"));
         },
         stop: function () { //show original when hiding clone
             on_drag_stop(this);
         }
     }).click(function () {
-        event_click(this);
+        show_event(this);
     });
 
 // DROPPABLE, CLICK(NEW_EVENT) В разрезе месяца и allday
@@ -104,7 +102,7 @@ function events_listeners() {
 // DRAGGABLE, RESIZABLE, CLICK(THIS_EVENT) В разрезе ДНЯ И НЕДЕЛИ (ЧАСЫ/NOT_ALL_DAY)
     $('.hour-event').draggable({
         axis: "x, y",
-        grid: [110, 1],
+        grid: [117, 1],
         containment: $('.event_hour_table'),
 
         start: function (event, ui) {
@@ -130,7 +128,7 @@ function events_listeners() {
             hour_event_on_drag_resize(event, ui, ui.size.height)
         }
     }).click(function () {
-        event_click(this);
+        show_event(this);
     });
 
 // AJAX ОБНОВЛЕНИЕ ЭВЕНТА, и reload страницы(Turbolinks)
@@ -152,11 +150,11 @@ function events_listeners() {
         });
     }
 
-    function show_event(event_id) {
-
+    function show_event(_this) {
+        if ($(_this).data('dragging/resizable')) return;
         $.ajax({
             type: "GET",
-            url: "/calendar_events/" + event_id + '/edit',
+            url: "/calendar_events/" + $(_this).data('id')+ '/edit',
             success: function (data) {
                 $(modal_holder_selector).html(data).find(modal_selector).modal();
             }
@@ -236,15 +234,14 @@ function events_listeners() {
         return (num >= 0 && num < 10) ? "0" + num : num + "";
     }
 
-    function on_drag_start(_this) {
+    function on_drag_start(holder) {
         $('.event').hide();
-        $(_this).parents().find('.event-content-container').css('overflow-y', 'visible').css('width', '100%');
+        $(holder).show();
     }
 
     function on_drag_stop(_this) {
         $(_this).show();
         $('.event').show();
-        $(_this).parents().find('.event-content-container').css('overflow-y', 'scroll').css('width', 'calc(100% + 15px)');
     }
 
     function hour_event_on_drag_resize(event, ui, height){
@@ -267,12 +264,4 @@ function events_listeners() {
             $(event.target).data('dragging/resizable', false);
         }, 1);
     }
-
-    function event_click(_this) {
-        if ($(_this).data('dragging/resizable')) return;
-        show_event($(_this).data('id'));
-    }
-
-
-
 }

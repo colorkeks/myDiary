@@ -6,6 +6,11 @@
         <% resizable_class = event.all_day ? 'event-resizable' : '' %>
         <% event_data = 'data-id=' + event.id.to_s + ' data-all-day=' + event.all_day.to_s + ' data-start-date=' +
                     event.start_date.to_datetime.to_s + ' data-end-date=' + event.end_date.to_datetime.to_s  %>
+        <% if calendarType == 'month' %>
+          <% width = 124 %>
+        <% elsif calendarType == 'week' %>
+          <% width = 117%>
+        <% end %>
         <tr>
           <% if date_range.to_a.include?(start_date) %>
               <% (start_date.cwday - 1).times do %>
@@ -30,7 +35,7 @@
           <% elsif end_included %>
               <% colpan = end_date.cwday %>
           <% end %>
-          <td colspan="<%= colpan %>">
+          <td colspan="<%= colpan %>" style="width: <%=  (colpan*width).to_s + 'px'%>">
             <div <%= event_data %> class="event week_event ">
               <div class="event_title">
                 <%= event.title %>

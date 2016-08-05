@@ -50,7 +50,7 @@
                   </tr>
                 </table>
                 <!--TODO СДЕЛАТЬ ТАК ЧТОБЫ СКРОЛИЛОСЬ ТОЛЬКО ТЕЛО-->
-                <div class="event-content-container scrollable">
+                <div class="event-content-container">
                   <table class="month_table_row droppable_table">
                     <thead>
                     <tr>
@@ -61,7 +61,7 @@
                       <% end %>
                     </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="month_table_body">
                     <% if (sorted_events.select { |key| !(key.to_a & week.to_a).empty? }).empty? %>
                         <tr>
                           <% week.each do |day| %>
@@ -74,7 +74,7 @@
                             <% key = pair.fetch(0) %>
                             <% events = pair.fetch(1) %>
 
-                            <%= render partial: 'calendar_templates/day_events_template', locals: {key: key, events: events, date_range: week} %>
+                            <%= render partial: 'calendar_templates/day_events_template', locals: {key: key, events: events, date_range: week, calendarType: 'month'} %>
                         <% end %>
                     <% end %>
                     </tbody>
