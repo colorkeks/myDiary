@@ -44,18 +44,16 @@ function events_listeners() {
     $('.date').droppable({
         drop: function () {
             $(this).css('background', 'rgba(133, 255, 179, 0.66)');
-            var event;
+            var event = $(".ui-draggable-dragging");
             // проверка на то ресайзится эвент или переносится
             if ($(".ui-draggable-dragging").hasClass('event-resizable')) {
                 event = $(".ui-draggable-dragging").parent();
                 ajax_event_update(event.data('id'), new Date(event.data('start-date')), new Date($(this).data('date')), event.data('all_day'), true);
             }
             else if ($(".ui-draggable-dragging").hasClass('to_all_day')) {
-                event = $(".ui-draggable-dragging");
                 ajax_event_update(event.data('id'), new Date($(this).data('date')), new Date($(this).data('date')), true, true);
             }
             else {
-                event = $(".ui-draggable-dragging");
                 var dates = get_new_start_and_end_date($(this).data('date'), event.data('start-date'), event.data('end-date'));
                 ajax_event_update(event.data('id'), dates[0], dates[1], event.data('all-day'), true);
             }
