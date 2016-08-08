@@ -29,6 +29,11 @@ gem 'simple_form'
 gem 'responders'
 gem 'twitter-bootstrap-rails', :git => 'https://github.com/seyhunak/twitter-bootstrap-rails.git', :branch => 'master'
 gem 'jquery-datetimepicker-rails'
+gem 'google_calendar'
+gem 'google-api-client', '~> 0.9', require: 'google/apis/calendar_v3'
+gem 'devise'
+gem 'omniauth'
+gem 'omniauth-google-oauth2'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'

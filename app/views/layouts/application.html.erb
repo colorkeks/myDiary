@@ -46,6 +46,13 @@
       <span class="icon-bar"></span>
     </button>
     <a class="navbar-brand" href="#">MyDiary</a>
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav navbar-right">
+        <% if user_signed_in? %>
+            <%= link_to 'Выйти', destroy_user_session_path, class: 'btn btn-bit btn-lg outline', style: 'bordef', :method => :delete %>
+        <% end %>
+      </ul>
+    </div>
   </div>
 </div>
 
