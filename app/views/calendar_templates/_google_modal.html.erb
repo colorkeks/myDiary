@@ -1,0 +1,24 @@
+<!-- Modal -->
+<div class="modal fade" id="google-import" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Import</h4>
+      </div>
+      <%= simple_form_for user, controller: :users, action: :update_and_import, html: {method: :put} do |f| %>
+          <div class="modal-body">
+            <%= f.input :client_id, input_html: {class: 'form-control'} %>
+            <%= f.input :client_secret, input_html: {class: 'form-control'} %>
+            <%= f.input :calendar_id, input_html: {class: 'form-control'} %>
+          </div>
+          <div class="modal-footer" style="text-align: left">
+            <%= f.submit 'Update & Import', class: 'btn btn-primary' %>
+            <%= link_to 'Import', {controller: :google, action: :redirect}, class: 'btn btn-success' %>
+            <div class="btn btn-default" data-dismiss="modal">Close</div>
+          </div>
+      <% end %>
+    </div>
+  </div>
+</div>

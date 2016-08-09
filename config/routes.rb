@@ -7,7 +7,17 @@ Rails.application.routes.draw do
     put 'ajax_update', on: :member
   end
 
-  devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" }
+  devise_for :users, :controllers => { :omniauth_callbacks => 'users/omniauth_callbacks' }
+
+  resources :users
+  resources :google do
+    collection do
+      get :redirect
+      get :callback
+      get :import_events
+    end
+  end
+
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

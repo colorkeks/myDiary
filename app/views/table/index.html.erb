@@ -1,3 +1,5 @@
- <%= calendar events: @calendar_events  do |date| %>
+
+<!--User опционально -->
+<%= calendar events: @calendar_events, user: @user  do |date| %>
       <%= date %>
-  <% end %>
+<% end %>

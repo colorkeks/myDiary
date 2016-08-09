@@ -14,6 +14,7 @@
 ActiveRecord::Schema.define(version: 20160808065243) do
 
   create_table "calendar_events", force: :cascade do |t|
+    t.string   "uid"
     t.string   "title"
     t.boolean  "all_day"
     t.datetime "start_date"
@@ -22,10 +23,14 @@ ActiveRecord::Schema.define(version: 20160808065243) do
     t.datetime "updated_at", null: false
   end
 
+  add_index "calendar_events", ["uid"], name: "index_calendar_events_on_uid", unique: true
+
   create_table "users", force: :cascade do |t|
+    t.string   "client_id"
+    t.string   "client_secret"
     t.string   "token"
-    t.string   "uid"
-    t.string   "provider"
+    t.string   "calendar_id"
+    t.string   "refresh_token"
     t.string   "email",                  default: "", null: false
     t.string   "encrypted_password",     default: "", null: false
     t.string   "reset_password_token"
@@ -42,6 +47,5 @@ ActiveRecord::Schema.define(version: 20160808065243) do
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
-  add_index "users", ["uid"], name: "index_users_on_uid", unique: true
 
 end

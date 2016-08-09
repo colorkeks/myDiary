@@ -7,9 +7,21 @@
     </div>
     <span class="date-title"><%= start_date.strftime('%B %Y') %></span>
     <div class="right-panel">
-      <%= link_to new_calendar_event_path, data: { modal: true }, class: 'btn btn-sm btn-success' do %>
-          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-      <% end %>
+      <div class="btn-group">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Action <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+          <li><%= link_to new_calendar_event_path, data: {modal: true} do %>
+                Добавить событие <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+            <% end %></li>
+          <% if user %>
+          <li data-toggle="modal" data-target="#google-import">
+            <a>Google import <span class="glyphicon glyphicon-import" aria-hidden="true"></span></a></li>
+          <li><a>Google export <span class="glyphicon glyphicon-export" aria-hidden="true"></span></a></li>
+          <% end %>
+        </ul>
+      </div>
       <div class="btn-group">
         <%= link_to t('diary.today', default: 'День'), calendar.to_calendar('day_calendar'), class: 'btn btn-default' %>
         <%= link_to t('diary.today', default: 'Неделя'), calendar.to_calendar('week_calendar'), class: 'btn btn-default' %>
@@ -17,6 +29,8 @@
       </div>
     </div>
   </div>
+
+  <%= render partial: 'calendar_templates/google_modal', locals: {user: user}  %>
 
   <table class="table week_table droppable_table">
     <thead>

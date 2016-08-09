@@ -4,6 +4,8 @@ class CreateUsers < ActiveRecord::Migration
       t.string :client_id
       t.string :client_secret
       t.string :token
+      t.string :calendar_id
+      t.string :refresh_token
 
       ## Database authenticatable
       t.string :email, null: false, default: ""
@@ -40,7 +42,6 @@ class CreateUsers < ActiveRecord::Migration
 
     add_index :users, :email, unique: true
     add_index :users, :reset_password_token, unique: true
-    add_index :users, :client_id, unique: true
     # add_index :users, :confirmation_token,   unique: true
     # add_index :users, :unlock_token,         unique: true
   end

@@ -16,6 +16,7 @@ module Diary
           locals: {
               block: block,
               calendar: self,
+              user: user,
               date_range: date_range,
               start_date: start_date,
               calendar_type: calendar_type,
@@ -58,6 +59,12 @@ module Diary
         @params.fetch('calendar_type')
       else
         view_context.params.fetch(:calendar_type, 'month_calendar')
+      end
+    end
+
+    def user
+      if options.has_key?(:user)
+        options.fetch(:user)
       end
     end
 

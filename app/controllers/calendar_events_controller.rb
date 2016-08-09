@@ -26,6 +26,7 @@ class CalendarEventsController < ApplicationController
 
   def create
     @calendar_event = CalendarEvent.new(calendar_event_params)
+    @calendar_event.uid = SecureRandom.hex
     @calendar_event.save
     respond_modal_with @calendar_event, :location => :back
   end
@@ -62,6 +63,6 @@ class CalendarEventsController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def calendar_event_params
-    params.require(:calendar_event).permit(:title, :all_day, :start_date, :end_date)
+    params.require(:calendar_event).permit(:uid, :title, :all_day, :start_date, :end_date)
   end
 end
