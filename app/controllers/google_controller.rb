@@ -72,7 +72,7 @@ class GoogleController < ApplicationController
     @user.calendar_events.each do |event|
       # если события в гугл календаре еще нету
       if event.uid.nil?
-        new_google_event(@service, @user.calendar_id, event)
+        result = new_google_event(@service, @user.calendar_id, event)
         event.update_attribute(:uid, result.id)
       #  если есть событие в гугл календаре
       else
