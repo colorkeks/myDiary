@@ -1,4 +1,5 @@
 class GoogleController < ApplicationController
+  include GoogleHelper
   before_action :set_user, only: [:set_service, :redirect, :callback, :import_events, :export_events]
   before_action :set_service, only: [:import_events, :export_events]
 
@@ -71,33 +72,11 @@ class GoogleController < ApplicationController
     @user.calendar_events.each do |event|
       # если события в гугл календаре еще нету
       if event.uid.nil?
-        google_event = Google::Apis::CalendarV3::Event.new(
-            summary: event.title,
-            start: {
-                date: event.all_day ? event.start_date.to_date : nil,
-                date_time:  event.all_day ? nil : event.start_date.to_datetime
-            },
-            end: {
-                date: event.all_day ? event.end_date.to_date : nil,
-                date_time:  event.all_day ? nil : event.end_date.to_datetime
-            }
-        )
-        result = @service.insert_event(@user.calendar_id, google_event)
+        new_google_event(@service, @user.calendar_id, event)
         event.update_attribute(:uid, result.id)
       #  если есть событие в гугл календаре
       else
-        google_event = @service.get_event(@user.calendar_id, event.uid)
-        google_event.summary = event.title
-
-        # обновляем start_date с проверкой на all_day
-        google_event.start.date = event.all_day ? event.start_date.to_date : nil
-        google_event.start.date_time =  event.all_day ? nil : event.start_date.to_datetime
-
-        # обновляем end_date с проверкой на all_day
-        google_event.end.date = event.all_day ? event.end_date.to_date : nil
-        google_event.end.date_time =  event.all_day ? nil : event.end_date.to_datetime
-
-        @service.update_event(@user.calendar_id, google_event.id, google_event)
+        update_google_event(@service, @user.calendar_id, event)
       end
     end
 
