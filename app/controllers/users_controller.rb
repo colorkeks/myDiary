@@ -23,11 +23,11 @@ class UsersController < ApplicationController
   end
 
   def update_and_export
-    # if @user.update(user_params)
-    #   redirect_to url_for(controller: :google, action: :redirect)
-    # else
-    #   redirect_to :back, notice: 'Error'
-    # end
+    if @user.update(user_params)
+      redirect_to url_for(controller: :google, action: :export_events)
+    else
+      redirect_to :back, notice: 'Error'
+    end
   end
 
 

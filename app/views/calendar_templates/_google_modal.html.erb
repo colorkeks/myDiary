@@ -32,7 +32,7 @@
           <span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title" id="myModalLabel">Export</h4>
       </div>
-      <%= simple_form_for user, url: update_and_import_users_path, html: {method: :put} do |f| %>
+      <%= simple_form_for user, url: update_and_export_users_path, html: {method: :put} do |f| %>
           <div class="modal-body">
             <%= f.input :client_id, input_html: {class: 'form-control'} %>
             <%= f.input :client_secret, input_html: {class: 'form-control'} %>
