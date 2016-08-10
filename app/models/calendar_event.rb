@@ -1,4 +1,6 @@
 class CalendarEvent < ActiveRecord::Base
+  belongs_to :user
+
   validates_presence_of :start_date, :end_date, :title
 
   validate :end_date_is_after_start_date, :check_all_day

@@ -1,12 +1,16 @@
 class GoogleController < ApplicationController
+  before_action :set_user, only: [:set_service, :redirect, :callback, :import_events, :export_events]
+  before_action :set_service, only: [:import_events, :export_events]
+
+
   #=begin получение доступа к google calendar по cliend_id и client_secret
   def redirect
     client = Signet::OAuth2::Client.new({
-                                            client_id: current_user.client_id,
-                                            client_secret: current_user.client_secret,
+                                            client_id: @user.client_id,
+                                            client_secret: @user.client_secret,
                                             authorization_uri: 'https://accounts.google.com/o/oauth2/auth',
-                                            scope: Google::Apis::CalendarV3::AUTH_CALENDAR_READONLY,
-                                            redirect_uri: url_for(:action => :callback)
+                                            scope: Google::Apis::CalendarV3::AUTH_CALENDAR,
+                                            redirect_uri: url_for(action: :callback)
                                         })
 
     redirect_to client.authorization_uri.to_s
@@ -14,41 +18,98 @@ class GoogleController < ApplicationController
 
   def callback
     client = Signet::OAuth2::Client.new({
-                                            client_id: current_user.client_id,
-                                            client_secret: current_user.client_secret,
+                                            client_id: @user.client_id,
+                                            client_secret: @user.client_secret,
                                             token_credential_uri: 'https://accounts.google.com/o/oauth2/token',
-                                            redirect_uri: url_for(:action => :callback),
+                                            redirect_uri: url_for(action: :callback),
                                             code: params[:code]
                                         })
 
     response = client.fetch_access_token!
+    @user.update(token: response['access_token'])
 
-    session[:access_token] = response['access_token']
-
-    redirect_to url_for(action: :import_events)
+    redirect_to url_for(action: session[:return_to])
   end
   #=end
 
   #=begin import google calendar events into myCalendar
   def import_events
-    access_token = AccessToken.new(session[:access_token])
-
-    service = Google::Apis::CalendarV3::CalendarService.new
-    service.authorization = access_token
-    response = service.list_events(current_user.calendar_id,
-                                   max_results: 10,
-                                   single_events: true,
-                                   order_by: 'startTime')
-
-    @events = []
+    # не уверен как правильно проверить валидность ключа
+    begin
+      response = @service.list_events(@user.calendar_id,
+                                      single_events: true,
+                                      order_by: 'startTime')
+    rescue
+      session[:return_to] = 'import_events'
+      redirect_to url_for(action: :redirect)
+      return
+    end
 
     response.items.each do |event|
       calendar_event = CalendarEvent.find_or_initialize_by(uid: event.id)
-      calendar_event.update_attributes(uid: event.id ,title: event.summary, start_date: event.start.date_time || event.start.date,
-                                       end_date: event.end.date_time || event.end.date, all_day: event.start.date_time.nil? ? true : false)
+      calendar_event.update_attributes(uid: event.id, title: event.summary, start_date: event.start.date_time || event.start.date,
+                                       end_date: event.end.date_time || event.end.date, all_day: event.start.date_time.nil? ? true : false,
+                                       user_id: @user.id)
     end
 
     redirect_to url_for(controller: :table, action: :index)
   end
+
   #=end
+
+
+  def export_events
+    begin
+      # проверить ключ на валидность (например так)
+      @service.get_calendar_list(@user.calendar_id)
+    rescue
+      session[:return_to] = 'export_events'
+      redirect_to url_for(action: :redirect)
+      return
+    end
+
+    @user.calendar_events.each do |event|
+      # если события в гугл календаре еще нету
+      if event.uid.nil?
+        google_event = Google::Apis::CalendarV3::Event.new(
+            summary: event.title,
+            start: {
+                date: event.all_day ? event.start_date.to_date : nil,
+                date_time:  event.all_day ? nil : event.start_date.to_datetime
+            },
+            end: {
+                date: event.all_day ? event.end_date.to_date : nil,
+                date_time:  event.all_day ? nil : event.end_date.to_datetime
+            }
+        )
+        result = @service.insert_event(@user.calendar_id, google_event)
+        event.update_attribute(:uid, result.id)
+      #  если есть событие в гугл календаре
+      else
+        google_event = @service.get_event(@user.calendar_id, event.uid)
+        google_event.summary = event.title
+
+        # обновляем start_date с проверкой на all_day
+        google_event.start.date = event.all_day ? event.start_date.to_date : nil
+        google_event.start.date_time =  event.all_day ? nil : event.start_date.to_datetime
+
+        # обновляем end_date с проверкой на all_day
+        google_event.end.date = event.all_day ? event.end_date.to_date : nil
+        google_event.end.date_time =  event.all_day ? nil : event.end_date.to_datetime
+
+        @service.update_event(@user.calendar_id, google_event.id, google_event)
+      end
+    end
+
+    redirect_to url_for(controller: :table, action: :index)
+  end
+
+  def set_user
+    @user = User.find(current_user.id)
+  end
+
+  def set_service
+    @service = Google::Apis::CalendarV3::CalendarService.new
+    @service.authorization = AccessToken.new(@user.token)
+  end
 end

@@ -6,6 +6,7 @@ class CreateCalendarEvents < ActiveRecord::Migration
       t.boolean :all_day
       t.datetime :start_date
       t.datetime :end_date
+      t.integer :user_id
 
       t.timestamps null: false
     end

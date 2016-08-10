@@ -9,12 +9,18 @@ Rails.application.routes.draw do
 
   devise_for :users, :controllers => { :omniauth_callbacks => 'users/omniauth_callbacks' }
 
-  resources :users
+  resources :users do
+    collection do
+      put'update_and_import'
+      put'update_and_export'
+    end
+  end
   resources :google do
     collection do
       get :redirect
       get :callback
       get :import_events
+      get :export_events
     end
   end
 

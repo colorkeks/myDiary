@@ -15,6 +15,7 @@ class CalendarEventsController < ApplicationController
 
   # GET /calendar_events/new
   def new
+    @user_id = current_user.id
     @calendar_event = CalendarEvent.new(params[:calendar_event].nil? ? nil : calendar_event_params )
     respond_modal_with @calendar_event
   end
@@ -26,7 +27,7 @@ class CalendarEventsController < ApplicationController
 
   def create
     @calendar_event = CalendarEvent.new(calendar_event_params)
-    @calendar_event.uid = SecureRandom.hex
+    # @calendar_event.uid = SecureRandom.hex
     @calendar_event.save
     respond_modal_with @calendar_event, :location => :back
   end
@@ -58,11 +59,12 @@ class CalendarEventsController < ApplicationController
   private
   # Use callbacks to share common setup or constraints between actions.
   def set_calendar_event
+    @user_id = current_user.id
     @calendar_event = CalendarEvent.find(params[:id])
   end
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def calendar_event_params
-    params.require(:calendar_event).permit(:uid, :title, :all_day, :start_date, :end_date)
+    params.require(:calendar_event).permit(:uid, :title, :all_day, :start_date, :end_date, :user_id)
   end
 end

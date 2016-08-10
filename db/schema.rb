@@ -19,6 +19,7 @@ ActiveRecord::Schema.define(version: 20160808065243) do
     t.boolean  "all_day"
     t.datetime "start_date"
     t.datetime "end_date"
+    t.integer  "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
