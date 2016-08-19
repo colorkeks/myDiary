@@ -1,3 +1,5 @@
 == README
 
 {<img src="https://codeclimate.com/github/colorkeks/myDiary/badges/gpa.svg" />}[https://codeclimate.com/github/colorkeks/myDiary]
+
+Функциональный календарь с разрезами день/неделя/месяц, с возможностью создавать, перемещать, ресайзить события с учетом длительности(all_day/not_all_day). Так же настроен импорт/экспорт событий в гугл календарь.
